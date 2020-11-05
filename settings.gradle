@@ -8,3 +8,9 @@ git {
     }
 }
 rootProject.name = 'java-instrumentation-template'
+include 'Kotlin-Coroutines_1.0'
+include 'Kotlin-Coroutines_1.1'
+include 'Kotlin-Coroutines_1.2'
+include 'Kotlin-Coroutines_1.3'
+include 'Kotlin-Coroutines_1.3.3'
+include 'Kotlin-Coroutines_1.4'
