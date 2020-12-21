@@ -6,6 +6,8 @@ kotlinx/coroutines/CompletionHandlerBase.java
  kotlinx.coroutines.CompletionHandlerBase
 kotlinx/coroutines/Job.java
  kotlinx.coroutines.Job
+com/nr/instrumentation/kotlin/coroutines/NRFunction2.java
+ com.nr.instrumentation.kotlin.coroutines.NRFunction2
 kotlin/coroutines/jvm/internal/BaseContinuationImpl.java
  kotlin.coroutines.jvm.internal.BaseContinuationImpl
 kotlinx/coroutines/InvokeOnCancelling.java
@@ -30,5 +32,7 @@ kotlinx/coroutines/CoroutineStart.java
  kotlinx.coroutines.CoroutineStart
 kotlinx/coroutines/CancelHandlerBase.java
  kotlinx.coroutines.CancelHandlerBase
+com/nr/instrumentation/kotlin/coroutines/NRFunction1.java
+ com.nr.instrumentation.kotlin.coroutines.NRFunction1
 kotlinx/coroutines/channels/ReceiveChannel.java
  kotlinx.coroutines.channels.ReceiveChannel
