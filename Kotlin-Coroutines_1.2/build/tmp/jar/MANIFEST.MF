@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: com.newrelic.instrumentation.Kotlin-Coroutines_1
- .2
-Implementation-Version: 1.0
-Implementation-Vendor-Id: com.newrelic
-Implementation-Vendor: New Relic
-
