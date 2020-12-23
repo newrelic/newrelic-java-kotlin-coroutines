@@ -18,16 +18,12 @@ public abstract class AbstractSendChannel<E> {
 		return Weaver.callOriginal();
 	}
 	
-//	@Trace
-//	public boolean offer(E e) {
-//		return Weaver.callOriginal();
-//	}
-	
 	@Trace
 	protected Object offerInternal(Object element) {
 		return Weaver.callOriginal();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Trace
 	protected Object offerSelectInternal(Object element, SelectInstance select) {
 		return Weaver.callOriginal();

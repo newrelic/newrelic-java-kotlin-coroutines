@@ -43,10 +43,10 @@ public abstract class AbstractCoroutine<T> implements Continuation<T> {
 
 	@Trace(dispatcher=true)
 	public final void start(CoroutineStart start, Function1<? super Continuation<? super T>, ? extends Object> f) {
-//		if(!(f instanceof NRFunction1)) {
-//			NRFunction1 wrapper = new NRFunction1(f);
-//			f = wrapper;
-//		}
+		if(!(f instanceof NRFunction1)) {
+			NRFunction1 wrapper = new NRFunction1(f);
+			f = wrapper;
+		}
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
@@ -56,10 +56,10 @@ public abstract class AbstractCoroutine<T> implements Continuation<T> {
 
 	@Trace(dispatcher=true)
 	public final <R> void start(CoroutineStart start, R r, Function2<? super R, ? super Continuation<? super T>, ? extends Object> f) {
-//		if(!(f instanceof NRFunction2)) {
-//			NRFunction2 wrapper = new NRFunction2(f);
-//			f = wrapper;
-//		}
+		if(!(f instanceof NRFunction2)) {
+			NRFunction2 wrapper = new NRFunction2(f);
+			f = wrapper;
+		}
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
