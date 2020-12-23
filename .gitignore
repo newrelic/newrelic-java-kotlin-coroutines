@@ -4,3 +4,8 @@ gradlew.bat
 gradlew
 gradle/**
 newrelic-agent
+build
+bin
+.classpath
+.project
+.settings
