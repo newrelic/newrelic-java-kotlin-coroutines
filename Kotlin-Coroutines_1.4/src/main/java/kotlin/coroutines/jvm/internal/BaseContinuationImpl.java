@@ -22,6 +22,20 @@ public abstract class BaseContinuationImpl {
 		}
 		Weaver.callOriginal();
 	}
+	
+	@Trace(dispatcher=true)
+	protected Object invokeSuspend(java.lang.Object obj) {
+		String name =  null;
+		StackTraceElement element = getStackTraceElement();
+		if(element != null) {
+			name = element.getClassName() + "." + element.getMethodName();
+		}
+		if(name != null) {
+			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Continuation",name,"invokeSuspend");
+		}
+		return Weaver.callOriginal();
+	}
+
 
 	public abstract StackTraceElement getStackTraceElement();
 }

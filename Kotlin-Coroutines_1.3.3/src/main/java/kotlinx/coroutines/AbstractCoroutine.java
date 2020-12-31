@@ -7,12 +7,15 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
+import com.nr.instrumentation.kotlin.coroutines.NRFunction1;
+import com.nr.instrumentation.kotlin.coroutines.NRFunction2;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Weave(type=MatchType.BaseClass)
 public abstract class AbstractCoroutine<T> implements Continuation<T> {
 
@@ -40,21 +43,27 @@ public abstract class AbstractCoroutine<T> implements Continuation<T> {
 
 	@Trace(dispatcher=true)
 	public final void start(CoroutineStart start, Function1<? super Continuation<? super T>, ? extends Object> f) {
+		if(!(f instanceof NRFunction1)) {
+			NRFunction1 wrapper = new NRFunction1(f);
+			f = wrapper;
+		}
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
-//		token = NewRelic.getAgent().getTransaction().getToken();
 		Weaver.callOriginal();
 	}
 
 	@Trace(dispatcher=true)
 	public final <R> void start(CoroutineStart start, R r, Function2<? super R, ? super Continuation<? super T>, ? extends Object> f) {
+		if(!(f instanceof NRFunction2)) {
+			NRFunction2 wrapper = new NRFunction2(f);
+			f = wrapper;
+		}
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
-//		token = NewRelic.getAgent().getTransaction().getToken();
 		Weaver.callOriginal();
 	}
 

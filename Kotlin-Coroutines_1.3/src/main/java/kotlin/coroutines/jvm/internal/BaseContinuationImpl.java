@@ -6,9 +6,13 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 
+import kotlin.coroutines.Continuation;
+
 @Weave(type=MatchType.BaseClass)
 public abstract class BaseContinuationImpl {
 	
+	public BaseContinuationImpl(Continuation<Object> c) {
+	}
 	
 	@Trace
 	public void resumeWith(Object obj) {
@@ -22,6 +26,20 @@ public abstract class BaseContinuationImpl {
 		}
 		Weaver.callOriginal();
 	}
+
+	@Trace
+	protected Object invokeSuspend(java.lang.Object obj) {
+		String name =  null;
+		StackTraceElement element = getStackTraceElement();
+		if(element != null) {
+			name = element.getClassName() + "." + element.getMethodName();
+		}
+		if(name != null) {
+			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Continuation",name,"invokeSuspend");
+		}
+		return Weaver.callOriginal();
+	}
+	
 
 	public abstract StackTraceElement getStackTraceElement();
 }
