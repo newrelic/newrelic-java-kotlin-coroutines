@@ -10,24 +10,23 @@ import com.newrelic.api.agent.weaver.Weaver;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import kotlin.jvm.functions.Function1;
 
 @Weave(type=MatchType.Interface)
 public abstract class Job {
 
 	@Trace
 	public void cancel(CancellationException e) {
-		NewRelic.noticeError(e);
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Job",getClass().getSimpleName(),"cancel");
+		if(e != null) {
+			NewRelic.noticeError(e);
+		}
 		Weaver.callOriginal();
 	}
 	
 	@Trace
-	public abstract Object join(Continuation<? super Unit> c);
+	public Object join(Continuation<? super Unit> c) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Job",getClass().getSimpleName(),"join");
+		return Weaver.callOriginal();
+	}
 	
-	@Trace
-	public abstract DisposableHandle invokeOnCompletion(Function1<? super Throwable, kotlin.Unit> f);
-	
-	@Trace
-	public abstract DisposableHandle invokeOnCompletion(boolean b1, boolean b2, Function1<? super Throwable, Unit> f);
-
 }

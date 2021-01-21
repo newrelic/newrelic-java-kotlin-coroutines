@@ -8,8 +8,8 @@ import com.newrelic.api.agent.weaver.Weaver;
 
 @Weave(type=MatchType.BaseClass)
 public abstract class BaseContinuationImpl {
-	
-	
+
+
 	@Trace
 	public void resumeWith(Object obj) {
 		String name =  null;
@@ -22,6 +22,18 @@ public abstract class BaseContinuationImpl {
 		}
 		Weaver.callOriginal();
 	}
+
+	@Trace
+	protected Object invokeSuspend(Object obj) {
+		String name = null;
+		StackTraceElement element = getStackTraceElement();
+		if (element != null)
+			name = element.getClassName() + "." + element.getMethodName(); 
+		if (name != null)
+			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] { "Custom", "Continuation", name, "invokeSuspend" }); 
+		return Weaver.callOriginal();
+	}
+
 
 	public abstract StackTraceElement getStackTraceElement();
 }

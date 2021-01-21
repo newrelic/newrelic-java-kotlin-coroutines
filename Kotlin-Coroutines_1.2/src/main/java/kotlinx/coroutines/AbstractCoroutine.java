@@ -1,10 +1,8 @@
 package kotlinx.coroutines;
 
 import com.newrelic.api.agent.NewRelic;
-import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.MatchType;
-import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 
@@ -22,64 +20,47 @@ public abstract class AbstractCoroutine<T> {
 
 	public abstract String nameString$kotlinx_coroutines_core();
 
-	@NewField
-	private Token token = null;
-
-	@Trace(async=true)
+	@Trace
 	public final void resumeWith(Object obj) {
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"resumeWith"});
 		}
-		if(token != null) {
-			token.linkAndExpire();
-			token = null;
-		}
 		Weaver.callOriginal();
 	}
 
-	@Trace(dispatcher=true)
+	@Trace
 	public final void start(CoroutineStart start, Function1<? super Continuation<? super T>, ? extends Object> f) {
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
-//		token = NewRelic.getAgent().getTransaction().getToken();
 		Weaver.callOriginal();
 	}
 
-	@Trace(dispatcher=true)
+	@Trace
 	public final <R> void start(CoroutineStart start, R r, Function2<? super R, ? super Continuation<? super T>, ? extends Object> f) {
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
-//		token = NewRelic.getAgent().getTransaction().getToken();
 		Weaver.callOriginal();
 	}
 
-	@Trace(async=true)
+	@Trace
 	protected void onCompleted(T t) {
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"onCompleted"});
 		}
-		if(token != null) {
-			token.linkAndExpire();
-			token = null;
-		}
 		Weaver.callOriginal();
 	}
 
-	@Trace(async=true)
+	@Trace
 	public  void handleOnCompletionException$kotlinx_coroutines_core(java.lang.Throwable t) {
 		String name = nameString$kotlinx_coroutines_core();
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"handleOnCompletionException"});
-		}
-		if(token != null) {
-			token.linkAndExpire();
-			token = null;
 		}
 		Weaver.callOriginal();
 	}
