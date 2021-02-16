@@ -1,18 +1,16 @@
-package kotlinx.coroutines;
+package kotlinx.coroutines.scheduling;
 
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
-import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.nr.instrumentation.kotlin.coroutines.NRRunnable;
+import com.newrelic.instrumentation.kotlin.coroutines.NRRunnable;
 
 import kotlin.coroutines.CoroutineContext;
 
-@Weave(type=MatchType.BaseClass)
-public abstract class ExecutorCoroutineDispatcherBase {
+@Weave
+public abstract class ExperimentalCoroutineDispatcher {
 
-	
 	public void dispatch(CoroutineContext context, Runnable block) {
 		if(!(block instanceof NRRunnable)) {
 			Token t = NewRelic.getAgent().getTransaction().getToken();
@@ -25,4 +23,5 @@ public abstract class ExecutorCoroutineDispatcherBase {
 		}
 		Weaver.callOriginal();
 	}
+
 }

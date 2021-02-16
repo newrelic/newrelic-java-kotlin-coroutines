@@ -1,10 +1,13 @@
 
-// Build.gradle generated for instrumentation module Kotlin-Coroutines_1.2
+// Build.gradle generated for instrumentation module kroto-plus
 
 apply plugin: 'java'
 
 dependencies {
-  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.2.0'
+   implementation 'com.github.marcoferrer.krotoplus:kroto-plus-coroutines:0.3.0'
+   implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
+   implementation 'io.grpc:grpc-stub:1.15.1'
+
 
    // New Relic Java Agent dependencies
    implementation 'com.newrelic.agent.java:newrelic-agent:6.0.0'
@@ -14,7 +17,7 @@ dependencies {
 
 jar {
   manifest {
-    attributes 'Implementation-Title': 'com.newrelic.instrumentation.Kotlin-Coroutines_1.2'
+    attributes 'Implementation-Title': 'com.newrelic.instrumentation.kroto-plus'
     attributes 'Implementation-Vendor': 'New Relic'
     attributes 'Implementation-Vendor-Id': 'com.newrelic'
     attributes 'Implementation-Version': 1.0
@@ -22,9 +25,5 @@ jar {
 }
 
 verifyInstrumentation {
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.2.0,)'
-	excludeRegex '.*SNAPSHOT'
-	excludeRegex '.*alpha'
-	excludeRegex '.*-eap-.*'
-	excludeRegex '.*-native-.*'
+    passes 'com.github.marcoferrer.krotoplus:kroto-plus-coroutines:[0.3.0,)'
 }
