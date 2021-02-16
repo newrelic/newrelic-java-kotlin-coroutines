@@ -5,7 +5,7 @@ import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.nr.instrumentation.kotlin.coroutines.NRRunnable;
+import com.newrelic.instrumentation.kotlin.coroutines.NRRunnable;
 
 @Weave(type=MatchType.BaseClass)
 public abstract class EventLoopImplBase {

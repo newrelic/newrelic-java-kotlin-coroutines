@@ -4,7 +4,7 @@ import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 
-public class NRWrappedRunnable implements Runnable {
+public class NRRunnable implements Runnable {
 	
 	
 	private static boolean isTranformed = false;
@@ -16,7 +16,7 @@ public class NRWrappedRunnable implements Runnable {
 		token = null;
 	}
 	
-	public NRWrappedRunnable(Runnable d, Token t) {
+	public NRRunnable(Runnable d, Token t) {
 		token = t;
 		delegate = d;
 		if(!isTranformed) {
