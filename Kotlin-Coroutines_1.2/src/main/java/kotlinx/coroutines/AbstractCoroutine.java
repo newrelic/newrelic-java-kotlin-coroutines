@@ -5,6 +5,8 @@ import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
+import com.newrelic.instrumentation.kotlin.coroutines.NRFunction1Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines.NRFunction2Wrapper;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
@@ -35,6 +37,8 @@ public abstract class AbstractCoroutine<T> {
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
+//		NRFunction1Wrapper<? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction1Wrapper(f,name);
+//		f = wrapper;
 		Weaver.callOriginal();
 	}
 
@@ -44,6 +48,8 @@ public abstract class AbstractCoroutine<T> {
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","Coroutine",name,"start"});
 		}
+//		NRFunction2Wrapper<? super R, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(f,name);
+//		f = wrapper;
 		Weaver.callOriginal();
 	}
 
