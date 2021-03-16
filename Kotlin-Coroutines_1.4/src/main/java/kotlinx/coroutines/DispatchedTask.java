@@ -10,6 +10,7 @@ import com.newrelic.instrumentation.kotlin.coroutines.Utils;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.internal.DispatchedContinuation;
 
 @Weave(type=MatchType.BaseClass)
 public abstract class DispatchedTask<T> {
@@ -30,7 +31,7 @@ public abstract class DispatchedTask<T> {
 				cName = "CoroutineFromSuspendFunction";
 			}
 			
-			if(context != null && !Utils.ignoreDispatched(cName)) {
+			if(context != null && !Utils.ignoreDispatched(continuation.getClass(), context)) {
 				Token t = Utils.getToken(context);
 				if(t != null) t.link();
 				if(cName != null)

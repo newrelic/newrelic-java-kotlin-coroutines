@@ -1,6 +1,5 @@
 package kotlinx.coroutines;
 
-import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
@@ -19,11 +18,14 @@ public class BuildersKt {
 
 	@Trace
 	public static final <T> T runBlocking(CoroutineContext context, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block) {
-		String name = Utils.getCoroutineName(context,block.getClass());
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","runBlocking",name);
+		
 		if (!Utils.ignoreSuspend(block.getClass(), context)) {
 			if (!(block instanceof NRFunction2Wrapper)) {
-				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block, name);
+				String name = Utils.getCoroutineName(context);
+				if (name == null)
+					name = block.getClass().getName();
+				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(
+						block, name);
 				block = wrapper;
 			} 
 		}
@@ -33,19 +35,17 @@ public class BuildersKt {
 
 	@Trace
 	public static final <T> Deferred<T> async(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block) {
-		String name = Utils.getCoroutineName(context);
-		if(name == null) {
-			name = Utils.getCoroutineName(scope.getCoroutineContext());
-		}
-		if(name == null) name = block.getClass().getName();
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async",name);
 		if(!Utils.ignoreSuspend(block.getClass(),context) && !Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext())) {
-			
 			NRCoroutineToken nrContextToken = Utils.setToken(context);
 			if(nrContextToken != null) {
 				context = context.plus(nrContextToken);
 			}
 			if(!(block instanceof NRFunction2Wrapper)) {
+				String name = Utils.getCoroutineName(context);
+				if(name == null) {
+					name = Utils.getCoroutineName(scope.getCoroutineContext());
+				}
+				if(name == null) name = block.getClass().getName();
 				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block,name);
 				block = wrapper;
 			}
@@ -67,18 +67,17 @@ public class BuildersKt {
 
 	@Trace
 	public static final kotlinx.coroutines.Job launch(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> block) {
-		String name = Utils.getCoroutineName(context);
-		if(name == null) {
-			name = Utils.getCoroutineName(scope.getCoroutineContext());
-		}
-		if(name == null) name = block.getClass().getName();
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","launch",name);
 		if(!Utils.ignoreSuspend(block.getClass(), context) && !Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext())) {
 			NRCoroutineToken nrContextToken = Utils.setToken(context);
 			if(nrContextToken != null) {
 				context = context.plus(nrContextToken);
 			}
 			if(!(block instanceof NRFunction2Wrapper)) {
+				String name = Utils.getCoroutineName(context);
+				if(name == null) {
+					name = Utils.getCoroutineName(scope.getCoroutineContext());
+				}
+				if(name == null) name = block.getClass().getName();
 				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> wrapper = new NRFunction2Wrapper(block,name);
 				block = wrapper;
 			}
@@ -89,9 +88,6 @@ public class BuildersKt {
 
 	@Trace
 	public static final <T> Object withContext(CoroutineContext context,Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block, Continuation<? super T> completion) {
-		String name = Utils.getCoroutineName(context);
-		if(name == null) name = block.getClass().getName();
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","withContext",name);
 		if(!Utils.ignoreSuspend(block.getClass(),context)) {
 
 			NRCoroutineToken nrContextToken = Utils.setToken(context);
@@ -99,6 +95,8 @@ public class BuildersKt {
 				context = context.plus(nrContextToken);
 			}
 			if(!(block instanceof NRFunction2Wrapper)) {
+				String name = Utils.getCoroutineName(context);
+				if(name == null) name = block.getClass().getName();
 				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block,name);
 				block = wrapper;
 			}

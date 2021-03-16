@@ -36,7 +36,7 @@ public class NRFunction2Wrapper<P1, P2, R> implements Function2<P1, P2, R> {
 		if(p2 instanceof Continuation) {
 			Continuation continuation = (Continuation)p2;
 			
-			if (!Utils.ignoreContinuation(name) && !Utils.ignoreContinuation(continuation.getClass(), continuation.getContext())) {
+			if (!Utils.ignoreContinuation(continuation.getClass(), continuation.getContext())) {
 				NRContinuationWrapper wrapper = new NRContinuationWrapper(continuation, name);
 				p2 = (P2) wrapper;
 			}

@@ -23,19 +23,12 @@ public class Utils implements AgentConfigListener {
 	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
 	private static final String CONTIGNORECONFIG = "Coroutines.ignores.continuations";
 	private static final String DISPATCHEDIGNORECONFIG = "Coroutines.ignores.dispatched";
-	
-	public static final String CREATEMETHOD1 = "kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
-	public static final String CREATEMETHOD2 = "kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
 
 	private static final Utils INSTANCE = new Utils();
 
 	static {
 		ServiceFactory.getConfigService().addIAgentConfigListener(INSTANCE);
 		Config config = NewRelic.getAgent().getConfig();
-		loadConfig(config);
-	}
-	
-	private static void loadConfig(Config config) {
 		String ignores = config.getValue(SUSPENDSIGNORECONFIG);
 		if (ignores != null && !ignores.isEmpty()) {
 			StringTokenizer st = new StringTokenizer(ignores, ",");
@@ -69,6 +62,7 @@ public class Utils implements AgentConfigListener {
 				}
 			} 
 		}
+		
 	}
 	
 	public static boolean ignoreContinuation(String name) {
@@ -76,35 +70,22 @@ public class Utils implements AgentConfigListener {
 	}
 	
 	public static boolean ignoreContinuation(Class<?> continuation, CoroutineContext context) {
-
-		String classname = continuation.getName();
-		if(ignoredContinuations.contains(classname)) {
-			return true;
-		}
 		
-		if(context == null) {
-			return false;
-		}
+		String classname = continuation.getName();
+		if(ignoredContinuations.contains(classname)) return true;
+		
+		if(context == null) return false;
 		
 		String name = getCoroutineName(context);
 		
-		if(ignoredContinuations.contains(name)) {
-			return true;
-		}
+		if(ignoredContinuations.contains(name)) return true;
 		
 		return false;
 	}
 	
-	
-	public static boolean ignoreDispatched(String name) {
-		return ignoredDispatchs.contains(name);
-	}
-	
 	public static boolean ignoreDispatched(Class<?> dispatched, CoroutineContext context) {
 		String classname = dispatched.getName();
-		if(ignoredDispatchs.contains(classname)) {
-			return true;
-		}
+		if(ignoredDispatchs.contains(classname)) return true;
 		
 		if(context == null) return false;
 		
@@ -173,7 +154,7 @@ public class Utils implements AgentConfigListener {
 		if(name != null) {
 			return name;
 		}
-		return clazz.getName();
+		return clazz.getSimpleName();
 	}
 
 	public static String getCoroutineName(CoroutineContext context) {
@@ -188,7 +169,7 @@ public class Utils implements AgentConfigListener {
 
 	@Override
 	public void configChanged(String appName, AgentConfig agentConfig) {
-		loadConfig(agentConfig);
+		// TODO Auto-generated method stub
 
 	}
 }

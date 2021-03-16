@@ -25,14 +25,11 @@ public abstract class DispatchedTask<T> {
 				DispatchedContinuation<T> dispatched = (DispatchedContinuation<T>)continuation;
 				continuation = dispatched.continuation;
 			}
-			String cName = Utils.getCoroutineName(context, continuation.getClass());
-			if(cName.equals(Utils.CREATEMETHOD1) || cName.equals(Utils.CREATEMETHOD2)) {
-				cName = "CoroutineFromSuspendFunction";
-			}
 			
-			if(context != null && !Utils.ignoreDispatched(cName)) {
+			if(context != null && !Utils.ignoreDispatched(continuation.getClass(), context)) {
 				Token t = Utils.getToken(context);
 				if(t != null) t.link();
+				String cName = Utils.getCoroutineName(context, continuation.getClass());
 				if(cName != null)
 					NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",cName);
 			}
