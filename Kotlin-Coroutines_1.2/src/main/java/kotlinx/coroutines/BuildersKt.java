@@ -57,7 +57,7 @@ public class BuildersKt {
 	public static final <T> Object invoke(CoroutineDispatcher dispatcher, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block, Continuation<? super T> c) {
 		if(!Utils.ignoreSuspend(block.getClass(), null)) {
 			if(!(block instanceof NRFunction2Wrapper)) {
-				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block,block.getClass().getName());
+				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block,Utils.getCoroutineName(null, c));
 				block = wrapper;
 			}
 		}
@@ -89,8 +89,7 @@ public class BuildersKt {
 
 	@Trace
 	public static final <T> Object withContext(CoroutineContext context,Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block, Continuation<? super T> completion) {
-		String name = Utils.getCoroutineName(context);
-		if(name == null) name = block.getClass().getName();
+		String name = Utils.getCoroutineName(context,completion,block.getClass());
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","withContext",name);
 		if(!Utils.ignoreSuspend(block.getClass(),context)) {
 

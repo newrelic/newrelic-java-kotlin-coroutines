@@ -32,7 +32,7 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 	@Trace(async=true)
 	public void resumeWith(Object p0) {
 		
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",name != null ? name : Utils.getCoroutineName(getContext(), delegate.getClass()));
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",name != null ? name : Utils.getCoroutineName(getContext(), delegate));
 		Token token = Utils.getToken(getContext());
 		if(token != null) {
 			token.link();

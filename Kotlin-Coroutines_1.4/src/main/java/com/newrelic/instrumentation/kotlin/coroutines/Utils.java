@@ -12,7 +12,9 @@ import com.newrelic.api.agent.Config;
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 
+import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.AbstractCoroutine;
 import kotlinx.coroutines.CoroutineName;
 
 public class Utils implements AgentConfigListener {
@@ -166,6 +168,22 @@ public class Utils implements AgentConfigListener {
 			token.expire();
 			context.minusKey(NRCoroutineToken.key);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> String getCoroutineName(CoroutineContext context, Continuation<T> continuation, Class<?> clazz) {
+		if(continuation instanceof AbstractCoroutine) {
+			return ((AbstractCoroutine<T>)continuation).nameString$kotlinx_coroutines_core();
+		}
+		return getCoroutineName(context,clazz);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> String getCoroutineName(CoroutineContext context, Continuation<T> continuation) {
+		if(continuation instanceof AbstractCoroutine) {
+			return ((AbstractCoroutine<T>)continuation).nameString$kotlinx_coroutines_core();
+		}
+		return getCoroutineName(context,continuation.getClass());
 	}
 
 	public static String getCoroutineName(CoroutineContext context, Class<?> clazz) {

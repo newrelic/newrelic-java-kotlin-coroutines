@@ -26,12 +26,9 @@ public abstract class DispatchedTask<T> {
 				DispatchedContinuation<T> dispatched = (DispatchedContinuation<T>)continuation;
 				continuation = dispatched.continuation;
 			}
-			String cName = Utils.getCoroutineName(context, continuation.getClass());
-			if(cName.equals(Utils.CREATEMETHOD1) || cName.equals(Utils.CREATEMETHOD2)) {
-				cName = "CoroutineFromSuspendFunction";
-			}
+			String cName = Utils.getCoroutineName(context, continuation);
 			
-			if(context != null && !Utils.ignoreDispatched(continuation.getClass(), context)) {
+			if(!notCreated(cName) && context != null && !Utils.ignoreDispatched(cName)) {
 				Token t = Utils.getToken(context);
 				if(t != null) t.link();
 				if(cName != null)
@@ -40,5 +37,12 @@ public abstract class DispatchedTask<T> {
 		}
 		Weaver.callOriginal();
 	}
+	
+	private boolean notCreated(String cName) {
+		if(cName.equals(Utils.CREATEMETHOD1)) return true;
+		if(cName.equals(Utils.CREATEMETHOD2)) return true;
+		return false;
+	}
+
 	
 }

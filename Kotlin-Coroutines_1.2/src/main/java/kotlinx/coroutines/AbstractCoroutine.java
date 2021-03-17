@@ -11,6 +11,7 @@ import kotlin.coroutines.CoroutineContext;
 public abstract class AbstractCoroutine<T> {
 
 	public abstract CoroutineContext getContext();
+	public abstract String nameString$kotlinx_coroutines_core();
 
 	protected void onCompleted(T value) {
 		Utils.expireToken(getContext());
