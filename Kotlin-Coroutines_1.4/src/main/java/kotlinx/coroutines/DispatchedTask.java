@@ -10,6 +10,7 @@ import com.newrelic.instrumentation.kotlin.coroutines.Utils;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.internal.DispatchedContinuation;
 
 @Weave(type=MatchType.BaseClass)
 public abstract class DispatchedTask<T> {
@@ -42,4 +43,6 @@ public abstract class DispatchedTask<T> {
 		if(cName.equals(Utils.CREATEMETHOD2)) return true;
 		return false;
 	}
+
+	
 }

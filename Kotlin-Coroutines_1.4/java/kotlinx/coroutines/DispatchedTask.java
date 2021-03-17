@@ -25,11 +25,11 @@ public abstract class DispatchedTask<T> {
 				DispatchedContinuation<T> dispatched = (DispatchedContinuation<T>)continuation;
 				continuation = dispatched.continuation;
 			}
-			String cName = Utils.getCoroutineName(context, continuation);
 			
-			if(!notCreated(cName) && context != null && !Utils.ignoreDispatched(cName)) {
+			if(context != null && !Utils.ignoreDispatched(continuation.getClass(), context)) {
 				Token t = Utils.getToken(context);
 				if(t != null) t.link();
+				String cName = Utils.getCoroutineName(context, continuation.getClass());
 				if(cName != null)
 					NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",cName);
 			}
@@ -37,9 +37,4 @@ public abstract class DispatchedTask<T> {
 		Weaver.callOriginal();
 	}
 	
-	private boolean notCreated(String cName) {
-		if(cName.equals(Utils.CREATEMETHOD1)) return true;
-		if(cName.equals(Utils.CREATEMETHOD2)) return true;
-		return false;
-	}
 }
