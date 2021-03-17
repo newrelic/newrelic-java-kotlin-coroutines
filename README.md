@@ -23,7 +23,7 @@ Restart the application.
 If you make changes to the instrumentation code and need to build the instrumentation jars, follow these steps
 1. Set environment variable NEW_RELIC_EXTENSIONS_DIR.  Its value should be the directory where you want to build the jars (i.e. the extensions directory of the Java Agent).   
 2. Build one or all of the jars.   
-a. To build one jar, run the command:  gradlew _moduleName_:clean  _moduleName_:install
+a. To build one jar, run the command:  gradlew _moduleName_:clean  _moduleName_:install    
 b. To build all jars, run the command: gradlew clean install
 3. Restart the application
 
