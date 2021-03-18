@@ -13,9 +13,42 @@ Restart the application.
 
 ## Getting Started
 
->[Simple steps to start working with the software similar to a "Hello World"]
+After deployment of the instrumentation jars, you should be able to see the invocation of a coroutine from start to finish across any threads that it executes on.
 
 ## Usage
+
+Instrumentation of methods with high invocation rates can lead to CPU overhead especially if its average response time is very small (i.e. less than a few milliseconds).  Therefore it is possible to configure the agent to ignore certain suspend methods, dispatched tasks and continuation resumeWiths.  This configuation is done in the newrelic.yml file.   
+
+### Finding Possible Methods to Ignore
+Run each of the following three NRQL queries where appName is the name of the application using Kotlin Coroutines.
+
+SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/DispatchedTask/%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
+   
+SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/WrappedSuspend/%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
+   
+SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/ContinuationWrapper%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
+   
+The following is a screenshot of DispatchedTasks
+   
+![image](https://user-images.githubusercontent.com/8822859/111648374-475b1c00-87d1-11eb-8a49-8b9d9f94fcdf.png)
+   
+At minumum consider ignoring anything over 50K.
+
+Below each rate is the name of the metric,  it has the form Custom/DispatchedTask/..., or Custom/WrappedSuspend/... or Custom/ContinuationWrapper/... depending on the query that was run.   Collect a list of the remaining metric name (i.e. the ...).
+   
+### Configuring Methods to Ignore
+To configure methods to ignore, edit the newrelic.yml file in the New Relic Java Agent directory.   
+1.  Find the following lines in newrelic.yml
+
+![image](https://user-images.githubusercontent.com/8822859/111703076-257e8b00-880b-11eb-8ae9-f0961e98f907.png)
+     
+2. Insert the following lines BEFORE the above lines being mindful of spaces at the beginning of each line (2 on first, 4 on second, 6 on third).  Each list is comma separated listed from ones found in the previous section.  If none are none for the particular line it can be omitted.   
+
+![image](https://user-images.githubusercontent.com/8822859/111703257-64acdc00-880b-11eb-86ae-66eb0254f618.png)
+   
+3. Save newrelic.yml 
+   
+Note that these setting are dynamic, so typically the agent should pick up changes within a minute or so and implement the changes without having to restart.
 
 
 ## Building
