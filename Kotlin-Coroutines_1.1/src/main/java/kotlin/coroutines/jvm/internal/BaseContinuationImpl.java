@@ -6,8 +6,10 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
 
+import kotlin.coroutines.Continuation;
+
 @Weave(type=MatchType.BaseClass)
-public abstract class BaseContinuationImpl {
+public abstract class BaseContinuationImpl implements Continuation<Object>{
 	
 	
 	@Trace
