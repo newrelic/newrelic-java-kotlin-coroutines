@@ -1,5 +1,20 @@
 [![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
 
+![GitHub forks](https://img.shields.io/github/forks/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
+![GitHub stars](https://img.shields.io/github/stars/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
+
+![GitHub all releases](https://img.shields.io/github/downloads/newrelic-experimental/newrelic-java-kotlin-coroutines/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub last commit](https://img.shields.io/github/last-commit/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub Release Date](https://img.shields.io/github/release-date/newrelic-experimental/newrelic-java-kotlin-coroutines)
+
+
+![GitHub issues](https://img.shields.io/github/issues/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic-experimental/newrelic-java-kotlin-coroutines)
+
 # New Relic Java Instrumentation for Kotlin Coroutines
 
 Provides instrumentation for Kotlin Coroutines.  In particular it will trace the coroutine from its start, suspend and resume.   It does this across multilple threads.
