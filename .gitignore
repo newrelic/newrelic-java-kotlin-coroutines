@@ -1,8 +1,4 @@
 .java-version
-.gradle
-gradlew.bat
-gradlew
-gradle/**
 newrelic-agent
 build
 bin
