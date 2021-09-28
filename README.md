@@ -19,6 +19,14 @@
 
 Provides instrumentation for Kotlin Coroutines.  In particular it will trace the coroutine from its start, suspend and resume.   It does this across multilple threads.
 
+## Supported Versions
+
+Kotlin-Coroutines-1.0 - all 1.0.x versions. 
+Kotlin-Coroutines-1.1 - all 1.1.x versions.  
+Kotlin-Coroutines-1.2 - all 1.2.x versions.  
+Kotlin-Coroutines-1.3 - all 1.3.x versions.   
+Kotlin-Coroutines-1.4 - all 1.4.x & 1.5.x versions.   
+
 ## Installation
 This use this instrumentation.   
 Download the latest release.    
