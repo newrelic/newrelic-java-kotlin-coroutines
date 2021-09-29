@@ -28,9 +28,9 @@ Kotlin-Coroutines-1.3 - all 1.3.x versions.
 Kotlin-Coroutines-1.4 - all 1.4.x & 1.5.x versions.   
 
 ## Installation
-This use this instrumentation.   
+To use this instrumentation.   
 Download the latest release.    
-In the New Relic Java Agent directory (directory containing newrelic.jar), create a directory named extensions if it doe not already exist.   
+In the New Relic Java Agent directory (directory containing newrelic.jar), create a directory named extensions if it does not already exist.   
 Copy the jars into the extensions directory.   
 Restart the application.   
 
