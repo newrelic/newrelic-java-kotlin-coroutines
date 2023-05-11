@@ -14,9 +14,9 @@ dependencies {
 
 jar {
   manifest {
-    attributes 'Implementation-Title': 'com.newrelic.instrumentation.Kotlin-Coroutines_1.2'
-    attributes 'Implementation-Vendor': 'New Relic'
-    attributes 'Implementation-Vendor-Id': 'com.newrelic'
+    attributes 'Implementation-Title': 'com.newrelic.instrumentation.labs.Kotlin-Coroutines_1.2'
+    attributes 'Implementation-Vendor': 'New Relic Labs'
+    attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
     attributes 'Implementation-Version': 1.0
   }
 }
