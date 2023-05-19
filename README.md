@@ -1,19 +1,19 @@
 <a href="https://opensource.newrelic.com/oss-category/#new-relic-experimental"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Experimental.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"><img alt="New Relic Open Source experimental project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"></picture></a>    
    
-![GitHub forks](https://img.shields.io/github/forks/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
-![GitHub stars](https://img.shields.io/github/stars/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/newrelic-experimental/newrelic-java-kotlin-coroutines?style=social)
+![GitHub forks](https://img.shields.io/github/forks/newrelic/newrelic-java-kotlin-coroutines?style=social)
+![GitHub stars](https://img.shields.io/github/stars/newrelic/newrelic-java-kotlin-coroutines?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/newrelic/newrelic-java-kotlin-coroutines?style=social)
 
-![GitHub all releases](https://img.shields.io/github/downloads/newrelic-experimental/newrelic-java-kotlin-coroutines/total)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic-experimental/newrelic-java-kotlin-coroutines)
-![GitHub last commit](https://img.shields.io/github/last-commit/newrelic-experimental/newrelic-java-kotlin-coroutines)
-![GitHub Release Date](https://img.shields.io/github/release-date/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub all releases](https://img.shields.io/github/downloads/newrelic/newrelic-java-kotlin-coroutines/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/newrelic/newrelic-java-kotlin-coroutines)
+![GitHub last commit](https://img.shields.io/github/last-commit/newrelic/newrelic-java-kotlin-coroutines)
+![GitHub Release Date](https://img.shields.io/github/release-date/newrelic/newrelic-java-kotlin-coroutines)
 
 
-![GitHub issues](https://img.shields.io/github/issues/newrelic-experimental/newrelic-java-kotlin-coroutines)
-![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic-experimental/newrelic-java-kotlin-coroutines)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic-experimental/newrelic-java-kotlin-coroutines)
-![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic-experimental/newrelic-java-kotlin-coroutines)
+![GitHub issues](https://img.shields.io/github/issues/newrelic/newrelic-java-kotlin-coroutines)
+![GitHub issues closed](https://img.shields.io/github/issues-closed/newrelic/newrelic-java-kotlin-coroutines)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic/newrelic-java-kotlin-coroutines)
+![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic/newrelic-java-kotlin-coroutines)
 
 # New Relic Java Instrumentation for Kotlin Coroutines
 
