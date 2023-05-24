@@ -25,7 +25,7 @@ Kotlin-Coroutines-1.0 - all 1.0.x versions.
 Kotlin-Coroutines-1.1 - all 1.1.x versions.  
 Kotlin-Coroutines-1.2 - all 1.2.x versions.  
 Kotlin-Coroutines-1.3 - all 1.3.x versions.   
-Kotlin-Coroutines-1.4 - all 1.4.x & 1.5.x versions.   
+Kotlin-Coroutines-1.4 - all 1.4.x and later versions.   
 
 ## Installation
 To use this instrumentation.   
