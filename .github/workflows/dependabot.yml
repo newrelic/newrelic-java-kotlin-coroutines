@@ -14,6 +14,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
           java-version: 8
+    - name: Setup libraries
+      run: | 
+          ./newrelic-dependencies.sh   
     - name: Setup Gradle to generate and submit dependency graphs
       uses: gradle/gradle-build-action@dependency-graph
       with:
