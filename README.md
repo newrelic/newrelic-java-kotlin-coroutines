@@ -43,13 +43,9 @@ After deployment of the instrumentation jars, you should be able to see the invo
 Instrumentation of methods with high invocation rates can lead to CPU overhead especially if its average response time is very small (i.e. less than a few milliseconds).  Therefore it is possible to configure the agent to ignore certain suspend methods, dispatched tasks and continuation resumeWiths.  This configuation is done in the newrelic.yml file.   
 
 ### Finding Possible Methods to Ignore
-Run each of the following three NRQL queries where appName is the name of the application using Kotlin Coroutines.
+Run the following NRQL query where appName is the name of the application using Kotlin Coroutines.
 
-SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/DispatchedTask/%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
-   
-SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/WrappedSuspend/%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
-   
-SELECT rate(count(newrelic.timeslice.value), 1 MINUTE)  FROM Metric WHERE metricTimesliceName Like 'Custom/ContinuationWrapper%' AND appName='appName”' SINCE 24 HOURS AGO FACET metricTimesliceName
+SELECT rate(count(newrelic.timeslice.value), 1 MINUTE) FROM Metric WHERE (metricTimesliceName Like 'Custom/DispatchedTask/%' or metricTimesliceName Like 'Custom/WrappedSuspend/%' or metricTimesliceName Like 'Custom/ContinuationWrapper%') AND appName='appName' SINCE 24 HOURS AGO FACET metricTimesliceName
    
 The following is a screenshot of DispatchedTasks
    
