@@ -3,7 +3,6 @@ package com.newrelic.instrumentation.kotlin.coroutines;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 
 import com.newrelic.agent.config.AgentConfig;
 import com.newrelic.agent.config.AgentConfigListener;
@@ -14,8 +13,10 @@ import com.newrelic.api.agent.Token;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlinx.coroutines.AbstractCoroutine;
 import kotlinx.coroutines.CoroutineName;
+import kotlinx.coroutines.DispatchedTask;
 
 public class Utils implements AgentConfigListener {
 
@@ -37,6 +38,24 @@ public class Utils implements AgentConfigListener {
 		loadConfig(config);
 	}
 	
+	public static NRRunnable getRunnableWrapper(Runnable r) {
+		if(r instanceof NRRunnable) {
+			return null;
+		}
+		if(r instanceof DispatchedTask) {
+			return null;
+		}
+		
+		Token t = NewRelic.getAgent().getTransaction().getToken();
+		if(t != null && t.isActive()) {
+			return new NRRunnable(r, t);
+		} else if(t != null) {
+			t.expire();
+			t = null;
+		}
+		return null;
+	}
+	
 	private static void loadConfig(Config config) {
 		String ignores = config.getValue(SUSPENDSIGNORECONFIG);
 		if (ignores != null && !ignores.isEmpty()) {
@@ -44,7 +63,6 @@ public class Utils implements AgentConfigListener {
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				if (token != null && !token.isEmpty()) {
-					NewRelic.getAgent().getLogger().log(Level.INFO, "will ignore suspend: {0}", token);
 					ignoredSuspends.add(token);
 				}
 			} 
@@ -55,7 +73,6 @@ public class Utils implements AgentConfigListener {
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				if (token != null && !token.isEmpty()) {
-					NewRelic.getAgent().getLogger().log(Level.INFO, "will ignore continuation: {0}", token);
 					ignoredContinuations.add(token);
 				}
 			} 
@@ -66,7 +83,6 @@ public class Utils implements AgentConfigListener {
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				if (token != null && !token.isEmpty()) {
-					NewRelic.getAgent().getLogger().log(Level.INFO, "will ignore dispatched continuation: {0}", token);
 					ignoredDispatchs.add(token);
 				}
 			} 
@@ -118,7 +134,7 @@ public class Utils implements AgentConfigListener {
 	}
 
 	public static boolean ignoreSuspend(Class<?> suspend, CoroutineContext context) {
-
+		
 		String classname = suspend.getName();
 
 		if(ignoredSuspends.contains(classname)) return true;
@@ -182,6 +198,9 @@ public class Utils implements AgentConfigListener {
 	public static <T> String getCoroutineName(CoroutineContext context, Continuation<T> continuation) {
 		if(continuation instanceof AbstractCoroutine) {
 			return ((AbstractCoroutine<T>)continuation).nameString$kotlinx_coroutines_core();
+		}
+		if(continuation instanceof SuspendLambda) {
+			return ((SuspendLambda)continuation).toString();
 		}
 		return getCoroutineName(context,continuation.getClass());
 	}

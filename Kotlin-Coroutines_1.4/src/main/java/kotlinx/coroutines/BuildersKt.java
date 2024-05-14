@@ -39,7 +39,7 @@ public class BuildersKt {
 		}
 		if(name == null) name = block.getClass().getName();
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async",name);
-		if(!Utils.ignoreSuspend(block.getClass(),context) && !Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext())) {
+		if(cStart != CoroutineStart.UNDISPATCHED && !Utils.ignoreSuspend(block.getClass(),context) && !Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext())) {
 			
 			NRCoroutineToken nrContextToken = Utils.setToken(context);
 			if(nrContextToken != null) {
@@ -67,13 +67,16 @@ public class BuildersKt {
 
 	@Trace
 	public static final kotlinx.coroutines.Job launch(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> block) {
+		
 		String name = Utils.getCoroutineName(context);
 		if(name == null) {
 			name = Utils.getCoroutineName(scope.getCoroutineContext());
 		}
 		if(name == null) name = block.getClass().getName();
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","launch",name);
-		if(!Utils.ignoreSuspend(block.getClass(), context) && !Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext())) {
+		boolean check1 = Utils.ignoreSuspend(block.getClass(), context);
+		boolean check2 = Utils.ignoreSuspend(block.getClass(), scope.getCoroutineContext());
+		if(cStart != CoroutineStart.UNDISPATCHED && !check1 && !check2) {
 			NRCoroutineToken nrContextToken = Utils.setToken(context);
 			if(nrContextToken != null) {
 				context = context.plus(nrContextToken);
