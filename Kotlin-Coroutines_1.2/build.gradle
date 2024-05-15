@@ -23,7 +23,7 @@ jar {
 
 verifyInstrumentation {
 	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.2.0,1.4.0)'
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.3.9,1.4.0)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.2.0,1.4.0)'
 	excludeRegex '.*SNAPSHOT'
 	excludeRegex '.*alpha'
 	excludeRegex '.*-eap-.*'
