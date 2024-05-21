@@ -27,22 +27,31 @@ public abstract class DispatchedTask<T> {
 				continuation = dispatched.continuation;
 			}
 			String cName = Utils.getCoroutineName(context, continuation);
+			if (cName != null && !cName.isEmpty()) {
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("Coroutine-Name", cName);
+			}
 			
-			if(!notCreated(cName) && context != null && !Utils.ignoreDispatched(cName)) {
+			String contString = Utils.getContinuationString(continuation);
+			if(contString != null && !Utils.ignoreDispatched(contString)) {
 				Token t = Utils.getToken(context);
 				if(t != null) t.link();
-				if(cName != null)
-					NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",cName);
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",contString);
 			}
+//			if(cName != null && !notCreated(cName) && context != null && !Utils.ignoreDispatched(cName)) {
+//				Token t = Utils.getToken(context);
+//				if(t != null) t.link();
+//				if(cName != null)
+//					NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",cName);
+//			}
 		}
 		Weaver.callOriginal();
 	}
 	
-	private boolean notCreated(String cName) {
-		if(cName.equals(Utils.CREATEMETHOD1)) return true;
-		if(cName.equals(Utils.CREATEMETHOD2)) return true;
-		return false;
-	}
-
+//	private boolean notCreated(String cName) {
+//		if(cName.equals(Utils.CREATEMETHOD1)) return true;
+//		if(cName.equals(Utils.CREATEMETHOD2)) return true;
+//		return false;
+//	}
+//
 	
 }

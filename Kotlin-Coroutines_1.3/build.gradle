@@ -4,7 +4,7 @@
 apply plugin: 'java'
 
 dependencies {
-  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.4.0'
+  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.3.0'
 
    // New Relic Java Agent dependencies
    implementation 'com.newrelic.agent.java:newrelic-agent:6.0.0'
@@ -14,7 +14,7 @@ dependencies {
 
 jar {
   manifest {
-    attributes 'Implementation-Title': 'com.newrelic.instrumentation.labs.Kotlin-Coroutines_1.4'
+    attributes 'Implementation-Title': 'com.newrelic.instrumentation.labs.Kotlin-Coroutines_1.3'
     attributes 'Implementation-Vendor': 'New Relic Labs'
     attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
     attributes 'Implementation-Version': 1.0
@@ -22,14 +22,12 @@ jar {
 }
 
 verifyInstrumentation {
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.4.0,1.5.0)'
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.4.0,1.5.0)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.2.0,1.4.0]'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.3.9,1.4.0)'
 	excludeRegex '.*SNAPSHOT'
 	excludeRegex '.*alpha'
 	excludeRegex '.*-eap-.*'
 	excludeRegex '.*-native-.*'
 	excludeRegex '.*-M[0-9]'
 	excludeRegex '.*-rc'
-	excludeRegex '.*-RC'
-	excludeRegex '.*-Beta'
 }
