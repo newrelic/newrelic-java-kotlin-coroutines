@@ -28,12 +28,12 @@ public class BuildersKt {
 			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","runBlocking");
 		}
 		NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
-		if (!Utils.ignoreSuspend(block.getClass(), block)) {
+//		if (!Utils.ignoreSuspend(block.getClass(), block)) {
 			if (!(block instanceof NRFunction2Wrapper)) {
 				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block, name);
 				block = wrapper;
 			} 
-		}
+//		}
 		T t = Weaver.callOriginal();
 		return t;
 	}
