@@ -18,7 +18,7 @@ jar {
     attributes 'Implementation-Vendor': 'New Relic Labs'
     attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
     attributes 'Implementation-Version': 2.0
-	attributes 'Agent-Class': 'com.newrelic.instrumentation.kotlin.coroutines.tracing.CoroutinesPreMain'
+	attributes 'Agent-Class': 'com.newrelic.instrumentation.kotlin.coroutines_15.tracing.CoroutinesPreMain'
   }
 }
 

@@ -7,9 +7,9 @@ import com.newrelic.api.agent.TransactionNamePriority;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines.NRFunction1Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines.NRFunction2Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRFunction1Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRFunction2Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_18.Utils;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;

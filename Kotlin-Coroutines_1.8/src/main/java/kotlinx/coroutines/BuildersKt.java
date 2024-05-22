@@ -4,11 +4,11 @@ import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines.NRContinuationWrapper;
-import com.newrelic.instrumentation.kotlin.coroutines.NRCoroutineToken;
-import com.newrelic.instrumentation.kotlin.coroutines.NRFunction2Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines.SuspendIgnores;
-import com.newrelic.instrumentation.kotlin.coroutines.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRContinuationWrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRCoroutineToken;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRFunction2Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_18.SuspendIgnores;
+import com.newrelic.instrumentation.kotlin.coroutines_18.Utils;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;

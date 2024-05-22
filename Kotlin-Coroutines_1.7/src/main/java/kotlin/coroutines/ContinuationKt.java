@@ -3,8 +3,8 @@ package kotlin.coroutines;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines.NRFunction1Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines.NRFunction2Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_17.NRFunction1Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_17.NRFunction2Wrapper;
 
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;

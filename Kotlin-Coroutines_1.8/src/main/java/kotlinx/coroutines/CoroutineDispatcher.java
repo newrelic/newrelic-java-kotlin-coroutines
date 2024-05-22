@@ -4,8 +4,8 @@ import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines.NRRunnable;
-import com.newrelic.instrumentation.kotlin.coroutines.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_18.NRRunnable;
+import com.newrelic.instrumentation.kotlin.coroutines_18.Utils;
 
 import kotlin.coroutines.CoroutineContext;
 
