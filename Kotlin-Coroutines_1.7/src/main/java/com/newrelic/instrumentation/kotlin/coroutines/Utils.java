@@ -3,6 +3,7 @@ package com.newrelic.instrumentation.kotlin.coroutines;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 
 import com.newrelic.agent.config.AgentConfig;
 import com.newrelic.agent.config.AgentConfigListener;
@@ -13,36 +14,35 @@ import com.newrelic.api.agent.Token;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
-import kotlin.coroutines.jvm.internal.SuspendLambda;
+import kotlin.coroutines.jvm.internal.BaseContinuationImpl;
 import kotlinx.coroutines.AbstractCoroutine;
 import kotlinx.coroutines.CoroutineName;
-import kotlinx.coroutines.DispatchedTask;
 
 public class Utils implements AgentConfigListener {
 
-	private static final List<String> ignoredSuspends = new ArrayList<String>();
 	private static final List<String> ignoredContinuations = new ArrayList<String>();
 	private static final List<String> ignoredDispatchs = new ArrayList<String>();
 	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
 	private static final String CONTIGNORECONFIG = "Coroutines.ignores.continuations";
 	private static final String DISPATCHEDIGNORECONFIG = "Coroutines.ignores.dispatched";
 	
-	public static final String CREATEMETHOD1 = "kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
-	public static final String CREATEMETHOD2 = "kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
-
+	public static final String CREATEMETHOD1 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
+	public static final String CREATEMETHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
 	private static final Utils INSTANCE = new Utils();
+	private static final String CONT_LOC = "Continuation at";
+	
 
 	static {
 		ServiceFactory.getConfigService().addIAgentConfigListener(INSTANCE);
 		Config config = NewRelic.getAgent().getConfig();
 		loadConfig(config);
+		ignoredContinuations.add(CREATEMETHOD1);
+		ignoredContinuations.add(CREATEMETHOD2);
+		
 	}
 	
 	public static NRRunnable getRunnableWrapper(Runnable r) {
 		if(r instanceof NRRunnable) {
-			return null;
-		}
-		if(r instanceof DispatchedTask) {
 			return null;
 		}
 		
@@ -59,13 +59,7 @@ public class Utils implements AgentConfigListener {
 	private static void loadConfig(Config config) {
 		String ignores = config.getValue(SUSPENDSIGNORECONFIG);
 		if (ignores != null && !ignores.isEmpty()) {
-			StringTokenizer st = new StringTokenizer(ignores, ",");
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				if (token != null && !token.isEmpty()) {
-					ignoredSuspends.add(token);
-				}
-			} 
+			SuspendIgnores.reset(config);
 		}
 		ignores = config.getValue(CONTIGNORECONFIG);
 		if (ignores != null && !ignores.isEmpty()) {
@@ -73,40 +67,30 @@ public class Utils implements AgentConfigListener {
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				if (token != null && !token.isEmpty()) {
-					ignoredContinuations.add(token);
+					if (ignoredContinuations.contains(token)) {
+						ignoredContinuations.add(token);
+						NewRelic.getAgent().getLogger().log(Level.FINE, "Will ignore Continuations named {0}", token);
+					}
 				}
 			} 
 		}
 		ignores = config.getValue(DISPATCHEDIGNORECONFIG);
 		if (ignores != null && !ignores.isEmpty()) {
-			StringTokenizer st = new StringTokenizer(ignores, ",");
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				if (token != null && !token.isEmpty()) {
-					ignoredDispatchs.add(token);
-				}
-			} 
+			DispatchedTaskIgnores.reset();
+			DispatchedTaskIgnores.configure(ignores);
 		}
 	}
 	
-	public static boolean ignoreContinuation(String name) {
-		return ignoredContinuations.contains(name);
-	}
-	
-	public static boolean ignoreContinuation(Class<?> continuation, CoroutineContext context) {
+	public static boolean ignoreContinuation(Class<?> continuation, Continuation<?> cont) {
 
 		String classname = continuation.getName();
 		if(ignoredContinuations.contains(classname)) {
 			return true;
 		}
 		
-		if(context == null) {
-			return false;
-		}
+		String continuationString = cont.toString();
 		
-		String name = getCoroutineName(context);
-		
-		if(ignoredContinuations.contains(name)) {
+		if(ignoredContinuations.contains(continuationString)) {
 			return true;
 		}
 		
@@ -118,38 +102,6 @@ public class Utils implements AgentConfigListener {
 		return ignoredDispatchs.contains(name);
 	}
 	
-	public static boolean ignoreDispatched(Class<?> dispatched, CoroutineContext context) {
-		String classname = dispatched.getName();
-		if(ignoredDispatchs.contains(classname)) {
-			return true;
-		}
-		
-		if(context == null) return false;
-		
-		String name = getCoroutineName(context);
-		
-		if(ignoredDispatchs.contains(name)) return true;
-		
-		return false;
-	}
-
-	public static boolean ignoreSuspend(Class<?> suspend, CoroutineContext context) {
-		
-		String classname = suspend.getName();
-
-		if(ignoredSuspends.contains(classname)) return true;
-
-		if(context == null) return false;
-
-		String name = getCoroutineName(context);
-
-		if(ignoredSuspends.contains(name)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public static String sub = "createCoroutineFromSuspendFunction";
 
 	public static NRCoroutineToken setToken(CoroutineContext context) {
@@ -187,30 +139,14 @@ public class Utils implements AgentConfigListener {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> String getCoroutineName(CoroutineContext context, Continuation<T> continuation, Class<?> clazz) {
-		if(continuation instanceof AbstractCoroutine) {
-			return ((AbstractCoroutine<T>)continuation).nameString$kotlinx_coroutines_core();
-		}
-		return getCoroutineName(context,clazz);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public static <T> String getCoroutineName(CoroutineContext context, Continuation<T> continuation) {
 		if(continuation instanceof AbstractCoroutine) {
 			return ((AbstractCoroutine<T>)continuation).nameString$kotlinx_coroutines_core();
 		}
-		if(continuation instanceof SuspendLambda) {
-			return ((SuspendLambda)continuation).toString();
+		if(continuation instanceof BaseContinuationImpl) {
+			return ((BaseContinuationImpl)continuation).toString();
 		}
-		return getCoroutineName(context,continuation.getClass());
-	}
-
-	public static String getCoroutineName(CoroutineContext context, Class<?> clazz) {
-		String name = getCoroutineName(context);
-		if(name != null) {
-			return name;
-		}
-		return clazz.getName();
+		return null;
 	}
 
 	public static String getCoroutineName(CoroutineContext context) {
@@ -227,5 +163,28 @@ public class Utils implements AgentConfigListener {
 	public void configChanged(String appName, AgentConfig agentConfig) {
 		loadConfig(agentConfig);
 
+	}
+	
+	public static <T> String getContinuationString(Continuation<T> continuation) {
+		String contString = continuation.toString();
+		
+		if(contString.endsWith(CREATEMETHOD1) || contString.equals(CREATEMETHOD2)) {
+			return sub;
+		}
+		
+		if(contString.startsWith(CONT_LOC)) {
+			return contString;
+		}
+		
+		if(continuation instanceof AbstractCoroutine) {
+			return ((AbstractCoroutine<?>)continuation).nameString$kotlinx_coroutines_core();
+		}
+		
+		int index = contString.indexOf('@');
+		if(index > -1) {
+			return contString.substring(0, index);
+		}
+		
+		return null;
 	}
 }

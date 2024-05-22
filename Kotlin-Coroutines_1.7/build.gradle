@@ -33,5 +33,6 @@ verifyInstrumentation {
 	excludeRegex '.*-M[0-9]'
 	excludeRegex '.*-rc'
 	excludeRegex '.*-RC'
+	excludeRegex '.*-RC[0-9]'
 	excludeRegex '.*-Beta'
 }
