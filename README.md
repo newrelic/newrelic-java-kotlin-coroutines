@@ -27,7 +27,6 @@ Kotlin-Coroutines-1.2 - all 1.2.x and 1.3.x versions.
 Kotlin-Coroutines-1.4 - all 1.4.x versions.   
 Kotlin-Coroutines-1.5 - all 1.5.x and 1.6.x versions.   
 Kotlin-Coroutines-1.7 - all 1.7.x versions.   
-Kotlin-Coroutines-1.8 - all 1.8.x versions and later.   
 
 ## Installation
 To use this instrumentation.   
@@ -50,8 +49,8 @@ The following things are captured as part of the instrumentation
 | Item | Metric Name format | Example |
 | ---- | ---- | ---- |
 | Suspend Functions | Custom/SuspendFunction/*ContinuationString* | Custom/SuspendFunction/Continuation at com.nrlabs.WithContextKt.main$doTaskOne(WithContext.kt:12) |
-| Dispatched Tasks | Custom/DispatchedTask | Custom/DispatchedTask/DispatchedContinuation[Dispatchers.Default, Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted... |
-| Continuation but not Suspend | Custom/
+| Dispatched Tasks | Custom/DispatchedTask//*ContinuationString* | Custom/DispatchedTask/DispatchedContinuation[Dispatchers.Default, Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted... |
+| Continuation but not Suspend | Custom/ContinuationWrapper/*ContinuationString* | |
 
 ## Usage
 
