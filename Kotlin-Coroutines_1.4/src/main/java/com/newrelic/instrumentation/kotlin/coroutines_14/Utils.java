@@ -17,11 +17,11 @@ import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.jvm.internal.BaseContinuationImpl;
 import kotlinx.coroutines.AbstractCoroutine;
 import kotlinx.coroutines.CoroutineName;
+import kotlinx.coroutines.DispatchedTask;
 
 public class Utils implements AgentConfigListener {
 
 	private static final List<String> ignoredContinuations = new ArrayList<String>();
-	private static final List<String> ignoredDispatchs = new ArrayList<String>();
 	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
 	private static final String CONTIGNORECONFIG = "Coroutines.ignores.continuations";
 	private static final String DISPATCHEDIGNORECONFIG = "Coroutines.ignores.dispatched";
@@ -44,6 +44,16 @@ public class Utils implements AgentConfigListener {
 	public static NRRunnable getRunnableWrapper(Runnable r) {
 		if(r instanceof NRRunnable) {
 			return null;
+		}
+		if(r instanceof DispatchedTask) {
+			DispatchedTask<?> task = (DispatchedTask<?>)r;
+			Continuation<?> cont = task.getDelegate$kotlinx_coroutines_core();
+			if(cont != null) {
+				String cont_string = getContinuationString(cont);
+				if(cont_string != null && DispatchedTaskIgnores.ignoreDispatchedTask(cont_string)) {
+					return null;
+				}
+			}
 		}
 		
 		Token t = NewRelic.getAgent().getTransaction().getToken();
@@ -95,11 +105,6 @@ public class Utils implements AgentConfigListener {
 		}
 		
 		return false;
-	}
-	
-	
-	public static boolean ignoreDispatched(String name) {
-		return ignoredDispatchs.contains(name);
 	}
 	
 	public static String sub = "createCoroutineFromSuspendFunction";

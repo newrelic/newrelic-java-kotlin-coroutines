@@ -7,13 +7,11 @@ import com.newrelic.api.agent.TransactionNamePriority;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines_15.NRFunction1Wrapper;
 import com.newrelic.instrumentation.kotlin.coroutines_15.NRFunction2Wrapper;
 import com.newrelic.instrumentation.kotlin.coroutines_15.Utils;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
 @Weave(type=MatchType.BaseClass)
@@ -33,7 +31,6 @@ public abstract class AbstractCoroutine<T> {
 	}
 
 	public void handleOnCompletionException$kotlinx_coroutines_core(Throwable t) {
-		//Utils.expireToken(getContext());
 		Weaver.callOriginal();
 	}
 

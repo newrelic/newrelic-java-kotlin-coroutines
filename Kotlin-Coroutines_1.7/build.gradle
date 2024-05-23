@@ -6,7 +6,7 @@ apply plugin: 'java'
 targetCompatibility = JavaVersion.VERSION_1_9
 
 dependencies {
-  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.7.0'
+  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.7.3'
 
    // New Relic Java Agent dependencies
    implementation 'com.newrelic.agent.java:newrelic-agent:6.0.0'
@@ -20,13 +20,12 @@ jar {
     attributes 'Implementation-Vendor': 'New Relic Labs'
     attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
     attributes 'Implementation-Version': 2.0
-	attributes 'Agent-Class': 'com.newrelic.instrumentation.kotlin.coroutines_17.tracing.CoroutinesPreMain'
   }
 }
 
 verifyInstrumentation {
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.7.0,)'
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.7.0,)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.7.0,1.8.0]'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.7.0,1.8.0]'
 	excludeRegex '.*SNAPSHOT'
 	excludeRegex '.*alpha'
 	excludeRegex '.*-eap-.*'

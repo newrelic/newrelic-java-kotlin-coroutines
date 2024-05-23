@@ -5,6 +5,9 @@ import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 
+import kotlin.coroutines.Continuation;
+import kotlinx.coroutines.DispatchedTask;
+
 public class NRRunnable implements Runnable {
 	
 	private Runnable delegate = null;
@@ -21,9 +24,21 @@ public class NRRunnable implements Runnable {
 	}
 
 	@Override
-	@Trace(async = true, excludeFromTransactionTrace = true)
+	@Trace(async = true)
 	public void run() {
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Kotlin","AsyncRunnableWrapper");
+		boolean nameSet = false;
+		if(delegate != null && delegate instanceof DispatchedTask) {
+			DispatchedTask<?> task = (DispatchedTask<?>)delegate;
+			Continuation<?> cont_delegate = task.getDelegate$kotlinx_coroutines_core();
+			if(cont_delegate != null) {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","DispatchedTask",Utils.getContinuationString(cont_delegate));
+				nameSet = true;
+			}
+		}
+		if(!nameSet) {
+			String delegateType = delegate != null ? delegate.getClass().getName() : "null";
+			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Kotlin","AsyncRunnableWrapper",delegateType);			
+		}
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;

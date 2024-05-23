@@ -7,7 +7,6 @@ import com.newrelic.api.agent.weaver.Weaver;
 import com.newrelic.instrumentation.kotlin.coroutines_15.NRContinuationWrapper;
 import com.newrelic.instrumentation.kotlin.coroutines_15.NRCoroutineToken;
 import com.newrelic.instrumentation.kotlin.coroutines_15.NRFunction2Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines_15.SuspendIgnores;
 import com.newrelic.instrumentation.kotlin.coroutines_15.Utils;
 
 import kotlin.Unit;
@@ -75,12 +74,7 @@ public class BuildersKt {
 		}
 		if(c != null && !Utils.ignoreContinuation(c.getClass(), c)) {
 			boolean isSuspend = c instanceof SuspendFunction;
-			if(isSuspend) {
-				if(!(SuspendIgnores.ignoreSuspend(c))) {
-					NRContinuationWrapper wrapper = new NRContinuationWrapper<>(c, null);
-					c = wrapper;
-				}
-			} else {
+			if(!isSuspend) {
 				NRContinuationWrapper wrapper = new NRContinuationWrapper<>(c, null);
 				c = wrapper;
 			}

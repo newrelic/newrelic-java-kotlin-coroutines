@@ -2,7 +2,14 @@ package kotlinx.coroutines;
 
 import com.newrelic.api.agent.weaver.SkipIfPresent;
 
+/**
+ * Included in order to avoid loading in lower versions
+ * 
+ * @author dhilpipre
+ *
+ */
+
 @SkipIfPresent
-public abstract class CoroutineExceptionHandlerImplKt {
+public class CoroutineExceptionHandlerImplKt {
 
 }

@@ -41,51 +41,6 @@ public class UndispatchedKt {
 		Weaver.callOriginal();
 	}
 
-//	@SuppressWarnings({ "unchecked", "rawtypes" })
-//	@Trace
-//	public static final <R, T> void startCoroutineUnintercepted(Function2<? super R, ? super Continuation<? super T>, ? extends Object> f, R receiver, Continuation<? super T> cont) {
-//		String continuationString = Utils.getContinuationString(cont);
-//		if(cont != null && !(cont instanceof SuspendFunction)) {
-//			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
-//				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
-//				cont = wrapper;
-//			}			
-//		}
-//		TracedMethod traced = NewRelic.getAgent().getTracedMethod();
-//		traced.addCustomAttribute("Suspend-Type", "Function2");
-//		if(continuationString != null) {
-//			traced.addCustomAttribute("Continuation", continuationString);
-//		}
-//		traced.addCustomAttribute("Receiver", receiver.getClass().getName());
-//		if(!(f instanceof NRFunction2Wrapper)) {
-//			NRFunction2Wrapper wrapper = new NRFunction2Wrapper<>(f);
-//			f = wrapper;
-//		}
-//		Weaver.callOriginal();
-//	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Trace
-	public static final <T> void startCoroutineUndispatched(Function1<? super Continuation<? super T>, ? extends Object> f, Continuation<? super T> cont) {
-		String continuationString = Utils.getContinuationString(cont);
-		if(cont != null && !(cont instanceof SuspendFunction)) {
-			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
-				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
-				cont = wrapper;
-			}			
-		}
-		TracedMethod traced = NewRelic.getAgent().getTracedMethod();
-		traced.addCustomAttribute("Suspend-Type", "Function1");
-		if(continuationString != null) {
-			traced.addCustomAttribute("Continuation", continuationString);
-		}
-		if(!(f instanceof NRFunction1Wrapper)) {
-			NRFunction1Wrapper wrapper = new NRFunction1Wrapper<>(f);
-			f = wrapper;
-		}
-		Weaver.callOriginal();
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Trace
 	public static final <R, T> void startCoroutineUndispatched(Function2<? super R, ? super Continuation<? super T>, ? extends Object> f, R receiver, Continuation<? super T> cont) {
