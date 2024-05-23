@@ -24,7 +24,10 @@ Provides instrumentation for Kotlin Coroutines.  In particular it will trace the
 Kotlin-Coroutines-1.0 - all 1.0.x versions. 
 Kotlin-Coroutines-1.1 - all 1.1.x versions.  
 Kotlin-Coroutines-1.2 - all 1.2.x and 1.3.x versions.   
-Kotlin-Coroutines-1.4 - all 1.4.x and later versions.   
+Kotlin-Coroutines-1.4 - all 1.4.x versions.   
+Kotlin-Coroutines-1.5 - all 1.5.x and 1.6.x versions.   
+Kotlin-Coroutines-1.7 - all 1.7.x versions.   
+Kotlin-Coroutines-1.8 - all 1.8.x versions and later.   
 
 ## Installation
 To use this instrumentation.   
@@ -37,9 +40,18 @@ Restart the application.
 The easiest way to see if the instrumentation has been loaded by the Java Agent is to look for the Java Agent UI's Metric Explorer and enter "supportability/weaveinstrumentation/loaded/com.newrelic.instrumentation.labs.kotlin-coroutines".  If a metric is reported then the agent has loaded the instrumentation appropriate to the version of Kotlin Coroutines that you are using.   
 If no metric is displayed, then check for "supportability/weaveinstrumentation/skipped/com.newrelic.instrumentation.labs.kotlin-coroutines".  If no metrics are displayed verify that the instrumentation jars have been deployed to the extensions directory and that the user id that runs the application has read access.    
 
+You can also check any captured transactions for Metrics that start with 'Custom/SuspendFunction/' or 'Custom/DispatchedTask'   
+
 ## Getting Started
 
-After deployment of the instrumentation jars, you should be able to see the invocation of a coroutine from start to finish across any threads that it executes on.
+After deployment of the instrumentation jars, you should be able to see the invocation of a coroutine from start to finish across any threads that it executes on.    
+   
+The following things are captured as part of the instrumentation   
+| Item | Metric Name format | Example |
+| ---- | ---- | ---- |
+| Suspend Functions | Custom/SuspendFunction/*ContinuationString* | Custom/SuspendFunction/Continuation at com.nrlabs.WithContextKt.main$doTaskOne(WithContext.kt:12) |
+| Dispatched Tasks | Custom/DispatchedTask | Custom/DispatchedTask/DispatchedContinuation[Dispatchers.Default, Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted... |
+| Continuation but not Suspend | Custom/
 
 ## Usage
 
