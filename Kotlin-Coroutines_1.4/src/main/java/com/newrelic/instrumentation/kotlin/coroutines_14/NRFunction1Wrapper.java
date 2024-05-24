@@ -25,7 +25,8 @@ public class NRFunction1Wrapper<P1, R> implements Function1<P1, R> {
 		if(p1 instanceof Continuation && !(p1 instanceof SuspendFunction)) {
 			// wrap if needed
 			if(!(p1 instanceof NRContinuationWrapper)) {
-				NRContinuationWrapper wrapper = new NRContinuationWrapper<>((Continuation)p1, p1.toString());
+				String cont_string = Utils.getContinuationString((Continuation)p1);
+				NRContinuationWrapper wrapper = new NRContinuationWrapper<>((Continuation)p1, cont_string);
 				p1 = (P1) wrapper;
 			}
 		}

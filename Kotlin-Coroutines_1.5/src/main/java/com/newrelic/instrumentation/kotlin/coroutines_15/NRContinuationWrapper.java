@@ -13,7 +13,6 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 	private Continuation<T> delegate = null;
 	private String name = null;
 	private static boolean isTransformed = false;
-	private Token token = null;
 	
 	public NRContinuationWrapper(Continuation<T> d, String n) {
 		delegate = d;
@@ -24,10 +23,6 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 		}
 	}
 	
-	public void setToken(Token t) {
-		token = t;
-	}
-
 	@Override
 	public CoroutineContext getContext() {
 		return delegate.getContext();
@@ -39,14 +34,18 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 		String contString = Utils.getContinuationString(delegate);
 		if(contString != null && !contString.isEmpty()) {
 			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",contString);
+		} else if(name != null) {
+			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",name);
 		} else {
-			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",name != null ? name : Utils.getCoroutineName(getContext(), delegate));
+			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","ContinuationWrapper","resumeWith",p0.getClass().getName());
 		}
-		Token t = token != null ? token : Utils.getToken(getContext());
+		Token t = Utils.getToken(getContext());
 		if(t != null) {
 			t.link();
 		}
-		delegate.resumeWith(p0);
+		if(delegate != null) {
+			delegate.resumeWith(p0);
+		}
 	}
 
 }

@@ -10,13 +10,9 @@ import com.newrelic.api.agent.NewRelic;
 public class SuspendIgnores {
 
 	private static final List<String> ignoredSuspends = new ArrayList<String>();
-	private static final String CREATEMETHOD1 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
-	private static final String CREATEMETHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
 	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
 
 	static {
-		ignoredSuspends.add(CREATEMETHOD1);
-		ignoredSuspends.add(CREATEMETHOD2);
 		Config config = NewRelic.getAgent().getConfig();
 		String value = config.getValue(SUSPENDSIGNORECONFIG);
 		init(value);
@@ -34,8 +30,6 @@ public class SuspendIgnores {
 	
 	public static void reset(Config config) {
 		ignoredSuspends.clear();
-		ignoredSuspends.add(CREATEMETHOD1);
-		ignoredSuspends.add(CREATEMETHOD2);
 		String value = config.getValue(SUSPENDSIGNORECONFIG);
 		init(value);
 	}

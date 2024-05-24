@@ -2,7 +2,6 @@ package com.newrelic.instrumentation.kotlin.coroutines_14;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.newrelic.agent.config.AgentConfig;
@@ -22,15 +21,15 @@ import kotlinx.coroutines.DispatchedTask;
 public class Utils implements AgentConfigListener {
 
 	private static final List<String> ignoredContinuations = new ArrayList<String>();
-	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
 	private static final String CONTIGNORECONFIG = "Coroutines.ignores.continuations";
 	private static final String DISPATCHEDIGNORECONFIG = "Coroutines.ignores.dispatched";
+	private static final String DELAYED_ENABLED_CONFIG = "Coroutines.delayed.enabled";
 	
 	public static final String CREATEMETHOD1 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
 	public static final String CREATEMETHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
 	private static final Utils INSTANCE = new Utils();
 	private static final String CONT_LOC = "Continuation at";
-	
+	public static boolean DELAYED_ENABLED = true;
 
 	static {
 		ServiceFactory.getConfigService().addIAgentConfigListener(INSTANCE);
@@ -38,6 +37,14 @@ public class Utils implements AgentConfigListener {
 		loadConfig(config);
 		ignoredContinuations.add(CREATEMETHOD1);
 		ignoredContinuations.add(CREATEMETHOD2);
+		Object value = config.getValue(DELAYED_ENABLED_CONFIG);
+		if(value != null) {
+			if(value instanceof Boolean) {
+				DELAYED_ENABLED = (Boolean)value;
+			} else {
+				DELAYED_ENABLED = Boolean.valueOf(value.toString());
+			}
+		}
 		
 	}
 	
@@ -67,44 +74,31 @@ public class Utils implements AgentConfigListener {
 	}
 	
 	private static void loadConfig(Config config) {
-		String ignores = config.getValue(SUSPENDSIGNORECONFIG);
+		String ignores = config.getValue(CONTIGNORECONFIG);
+		NewRelic.getAgent().getLogger().log(Level.FINE, "Value of {0}: {1}", CONTIGNORECONFIG, ignores);
 		if (ignores != null && !ignores.isEmpty()) {
-			SuspendIgnores.reset(config);
-		}
-		ignores = config.getValue(CONTIGNORECONFIG);
-		if (ignores != null && !ignores.isEmpty()) {
-			StringTokenizer st = new StringTokenizer(ignores, ",");
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				if (token != null && !token.isEmpty()) {
-					if (ignoredContinuations.contains(token)) {
-						ignoredContinuations.add(token);
-						NewRelic.getAgent().getLogger().log(Level.FINE, "Will ignore Continuations named {0}", token);
-					}
+			ignoredContinuations.clear();
+			String[] ignoresList = ignores.split(",");
+			
+			for(String ignore : ignoresList) {
+				if (!ignoredContinuations.contains(ignore)) {
+					ignoredContinuations.add(ignore);
+					NewRelic.getAgent().getLogger().log(Level.FINE, "Will ignore Continuations named {0}", ignore);
 				}
-			} 
+			}
+		} else if(!ignoredContinuations.isEmpty()) {
+			ignoredContinuations.clear();
 		}
 		ignores = config.getValue(DISPATCHEDIGNORECONFIG);
+		NewRelic.getAgent().getLogger().log(Level.FINE, "Value of {0}: {1}", DISPATCHEDIGNORECONFIG, ignores);
+		DispatchedTaskIgnores.reset();
 		if (ignores != null && !ignores.isEmpty()) {
-			DispatchedTaskIgnores.reset();
 			DispatchedTaskIgnores.configure(ignores);
 		}
 	}
 	
-	public static boolean ignoreContinuation(Class<?> continuation, Continuation<?> cont) {
-
-		String classname = continuation.getName();
-		if(ignoredContinuations.contains(classname)) {
-			return true;
-		}
-		
-		String continuationString = cont.toString();
-		
-		if(ignoredContinuations.contains(continuationString)) {
-			return true;
-		}
-		
-		return false;
+	public static boolean ignoreContinuation(String cont_string) {
+		return ignoredContinuations.contains(cont_string);
 	}
 	
 	public static String sub = "createCoroutineFromSuspendFunction";
@@ -167,13 +161,20 @@ public class Utils implements AgentConfigListener {
 	@Override
 	public void configChanged(String appName, AgentConfig agentConfig) {
 		loadConfig(agentConfig);
-
+		Object value = agentConfig.getValue(DELAYED_ENABLED_CONFIG);
+		if(value != null) {
+			if(value instanceof Boolean) {
+				DELAYED_ENABLED = (Boolean)value;
+			} else {
+				DELAYED_ENABLED = Boolean.valueOf(value.toString());
+			}
+		}
 	}
 	
 	public static <T> String getContinuationString(Continuation<T> continuation) {
 		String contString = continuation.toString();
 		
-		if(contString.endsWith(CREATEMETHOD1) || contString.equals(CREATEMETHOD2)) {
+		if(contString.equals(CREATEMETHOD1) || contString.equals(CREATEMETHOD2)) {
 			return sub;
 		}
 		

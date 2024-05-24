@@ -24,7 +24,7 @@ public class UndispatchedKt {
 	public static final <T> void startCoroutineUnintercepted(Function1<? super Continuation<? super T>, ? extends Object> f, Continuation<? super T> cont) {
 		String continuationString = Utils.getContinuationString(cont);
 		if(cont != null && !(cont instanceof SuspendFunction)) {
-			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
+			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(continuationString)) {
 				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
 				cont = wrapper;
 			}
@@ -46,7 +46,7 @@ public class UndispatchedKt {
 	public static final <R, T> void startCoroutineUnintercepted(Function2<? super R, ? super Continuation<? super T>, ? extends Object> f, R receiver, Continuation<? super T> cont) {
 		String continuationString = Utils.getContinuationString(cont);
 		if(cont != null && !(cont instanceof SuspendFunction)) {
-			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
+			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(continuationString)) {
 				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
 				cont = wrapper;
 			}			
@@ -69,7 +69,7 @@ public class UndispatchedKt {
 	public static final <T> void startCoroutineUndispatched(Function1<? super Continuation<? super T>, ? extends Object> f, Continuation<? super T> cont) {
 		String continuationString = Utils.getContinuationString(cont);
 		if(cont != null && !(cont instanceof SuspendFunction)) {
-			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
+			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(continuationString)) {
 				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
 				cont = wrapper;
 			}			
@@ -91,7 +91,7 @@ public class UndispatchedKt {
 	public static final <R, T> void startCoroutineUndispatched(Function2<? super R, ? super Continuation<? super T>, ? extends Object> f, R receiver, Continuation<? super T> cont) {
 		String continuationString = Utils.getContinuationString(cont);
 		if(cont != null && !(cont instanceof SuspendFunction)) {
-			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(cont.getClass(), cont)) {
+			if(!(cont instanceof NRContinuationWrapper) && !Utils.ignoreContinuation(continuationString)) {
 				NRContinuationWrapper<? super T> wrapper = new NRContinuationWrapper<>(cont, continuationString);
 				cont = wrapper;
 			}			

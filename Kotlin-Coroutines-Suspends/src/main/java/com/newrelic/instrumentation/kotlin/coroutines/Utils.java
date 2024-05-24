@@ -8,31 +8,34 @@ import com.newrelic.api.agent.NewRelic;
 
 public class Utils implements AgentConfigListener {
 
-	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
-	
 	private static final Utils INSTANCE = new Utils();
-	
+	public static final String CREATEMETHOD1 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
+	public static final String CREATEMETHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
+	public static String sub = "createCoroutineFromSuspendFunction";
+	private static final String CONT_LOC = "Continuation at";
 
 	static {
 		ServiceFactory.getConfigService().addIAgentConfigListener(INSTANCE);
 		Config config = NewRelic.getAgent().getConfig();
-		loadConfig(config);
-		
+		SuspendIgnores.reset(config);
 	}
-		
-	private static void loadConfig(Config config) {
-		String ignores = config.getValue(SUSPENDSIGNORECONFIG);
-		if (ignores != null && !ignores.isEmpty()) {
-			SuspendIgnores.reset(config);
-		}
-	}
-	
-	public static String sub = "createCoroutineFromSuspendFunction";
 
 	@Override
 	public void configChanged(String appName, AgentConfig agentConfig) {
-		loadConfig(agentConfig);
-
+		SuspendIgnores.reset(agentConfig);
 	}
-	
+
+	public static String getSuspendString(String cont_string, Object obj) {
+		if(cont_string.equals(CREATEMETHOD1) || cont_string.equals(CREATEMETHOD2)) return sub;
+		if(cont_string.startsWith(CONT_LOC)) {
+			return cont_string;
+		}
+
+		int index = cont_string.indexOf('@');
+		if(index > -1) {
+			return cont_string.substring(0, index);
+		}
+		
+		return obj.getClass().getName();
+	}
 }
