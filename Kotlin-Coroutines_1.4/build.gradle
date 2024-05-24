@@ -17,13 +17,13 @@ jar {
     attributes 'Implementation-Title': 'com.newrelic.instrumentation.labs.Kotlin-Coroutines_1.4'
     attributes 'Implementation-Vendor': 'New Relic Labs'
     attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
-    attributes 'Implementation-Version': 1.0
+    attributes 'Implementation-Version': 2.0
   }
 }
 
 verifyInstrumentation {
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.4.0,1.7.0)'
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.4.0,1.7.0)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.4.0,1.5.0)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.4.0,1.5.0)'
 	excludeRegex '.*SNAPSHOT'
 	excludeRegex '.*alpha'
 	excludeRegex '.*-eap-.*'
