@@ -1,3 +1,6 @@
+## Version: [v1.0.3](https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/tag/v1.0.3) | Created: 2024-07-30
+
+
 ## Version: [v1.0.2](https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/tag/v1.0.2) | Created: 2024-05-30
 
 
