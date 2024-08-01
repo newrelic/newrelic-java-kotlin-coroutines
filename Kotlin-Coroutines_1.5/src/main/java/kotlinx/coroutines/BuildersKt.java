@@ -1,6 +1,7 @@
 package kotlinx.coroutines;
 
 import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
@@ -21,9 +22,14 @@ public class BuildersKt {
 
 	@Trace(dispatcher = true)
 	public static final <T> T runBlocking(CoroutineContext context, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block) {
-		NRCoroutineToken nrContextToken = Utils.setToken(context);
-		if(nrContextToken != null) {
-			context = context.plus(nrContextToken);
+		Token token = Utils.getToken(context);
+		if(token != null) {
+			token.link();
+		} else {
+			NRCoroutineToken nrContextToken = Utils.setToken(context);
+			if(nrContextToken != null) {
+				context = context.plus(nrContextToken);
+			}
 		}
 		String name = Utils.getCoroutineName(context);
 		if(name != null) {
@@ -43,23 +49,32 @@ public class BuildersKt {
 
 	@Trace(dispatcher = true)
 	public static final <T> Deferred<T> async(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block) {
-		String name = Utils.getCoroutineName(context);
-		if(name == null) {
-			name = Utils.getCoroutineName(scope.getCoroutineContext());
-		}
-		if(name != null) {
-			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async",name);
-		} else {
-			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async");
-		}
+		if (!Utils.ignoreScope(scope)) {
+			String name = Utils.getCoroutineName(context);
+			if(name == null) {
+				name = Utils.getCoroutineName(scope.getCoroutineContext());
+			}
+			if(name != null) {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async",name);
+			} else {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async");
+			}
 
-		NRCoroutineToken nrContextToken = Utils.setToken(context);
-		if(nrContextToken != null) {
-			context = context.plus(nrContextToken);
-		}
-		if(!(block instanceof NRFunction2Wrapper)) {
-			NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block);
-			block = wrapper;
+			Token token = Utils.getToken(context);
+			if(token != null) {
+				token.link();
+			} else {
+				NRCoroutineToken nrContextToken = Utils.setToken(context);
+				if(nrContextToken != null) {
+					context = context.plus(nrContextToken);
+				}
+			}
+			if(!(block instanceof NRFunction2Wrapper)) {
+				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block);
+				block = wrapper;
+			}
+		} else {
+			NewRelic.getAgent().getTransaction().ignore();
 		}
 		return Weaver.callOriginal();
 	}
@@ -86,24 +101,36 @@ public class BuildersKt {
 
 	@Trace(dispatcher = true)
 	public static final kotlinx.coroutines.Job launch(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> block) {
-		NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineStart", cStart.name());
-		String name = Utils.getCoroutineName(context);
-		if(name == null) {
-			name = Utils.getCoroutineName(scope.getCoroutineContext());
-		}
-		if(name != null) {
-			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","launch",name);
+		if (!Utils.ignoreScope(scope)) {
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineStart", cStart.name());
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineScope-Class", scope.getClass().getName());
+			
+			String name = Utils.getCoroutineName(context);
+			if (name == null) {
+				name = Utils.getCoroutineName(scope.getCoroutineContext());
+			}
+			if (name != null) {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch", name);
+			} else {
+				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch");
+			}
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
+			Token token = Utils.getToken(context);
+			if(token != null) {
+				token.link();
+			} else {
+				NRCoroutineToken nrContextToken = Utils.setToken(context);
+				if(nrContextToken != null) {
+					context = context.plus(nrContextToken);
+				}
+			}
+			if (!(block instanceof NRFunction2Wrapper)) {
+				NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> wrapper = new NRFunction2Wrapper(
+						block);
+				block = wrapper;
+			} 
 		} else {
-			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","launch");
-		}
-		NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
-		NRCoroutineToken nrContextToken = Utils.setToken(context);
-		if(nrContextToken != null) {
-			context = context.plus(nrContextToken);
-		}
-		if(!(block instanceof NRFunction2Wrapper)) {
-			NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super Unit>, ? extends Object> wrapper = new NRFunction2Wrapper(block);
-			block = wrapper;
+			NewRelic.getAgent().getTransaction().ignore();
 		}
 		Job j = Weaver.callOriginal();
 		return j;
@@ -121,9 +148,14 @@ public class BuildersKt {
 			NewRelic.getAgent().getTracedMethod().addCustomAttribute("Completion", completion.toString());
 		}
 
-		NRCoroutineToken nrContextToken = Utils.setToken(context);
-		if(nrContextToken != null) {
-			context = context.plus(nrContextToken);
+		Token token = Utils.getToken(context);
+		if(token != null) {
+			token.link();
+		} else {
+			NRCoroutineToken nrContextToken = Utils.setToken(context);
+			if(nrContextToken != null) {
+				context = context.plus(nrContextToken);
+			}
 		}
 		if(!(block instanceof NRFunction2Wrapper)) {
 			NRFunction2Wrapper<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper(block);

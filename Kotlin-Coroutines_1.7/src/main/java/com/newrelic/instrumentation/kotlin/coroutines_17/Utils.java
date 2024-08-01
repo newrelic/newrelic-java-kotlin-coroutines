@@ -16,12 +16,15 @@ import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.jvm.internal.BaseContinuationImpl;
 import kotlinx.coroutines.AbstractCoroutine;
 import kotlinx.coroutines.CoroutineName;
+import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.DispatchedTask;
 
 public class Utils implements AgentConfigListener {
 
 	private static final List<String> ignoredContinuations = new ArrayList<String>();
+	private static final List<String> ignoredScopes = new ArrayList<>();
 	private static final String CONTIGNORECONFIG = "Coroutines.ignores.continuations";
+	private static final String SCOPESIGNORECONFIG = "Coroutines.ignores.scopes";
 	private static final String DISPATCHEDIGNORECONFIG = "Coroutines.ignores.dispatched";
 	private static final String DELAYED_ENABLED_CONFIG = "Coroutines.delayed.enabled";
 	
@@ -95,6 +98,32 @@ public class Utils implements AgentConfigListener {
 		if (ignores != null && !ignores.isEmpty()) {
 			DispatchedTaskIgnores.configure(ignores);
 		}
+		ignores = config.getValue(SCOPESIGNORECONFIG);
+		if (ignores != null && !ignores.isEmpty()) {
+			ignoredScopes.clear();
+			String[] ignoresList = ignores.split(",");
+			
+			for(String ignore : ignoresList) {
+				if (!ignoredScopes.contains(ignore)) {
+					ignoredScopes.add(ignore);
+					NewRelic.getAgent().getLogger().log(Level.FINE, "Will ignore CoroutineScopes named {0}", ignore);
+				}
+			}
+		} else if(!ignoredScopes.isEmpty()) {
+			ignoredScopes.clear();
+		}
+		
+	}
+	
+	public static boolean ignoreScope(CoroutineScope scope) {
+		CoroutineContext ctx = scope.getCoroutineContext();
+		String name = getCoroutineName(ctx);
+		String className = scope.getClass().getName();
+		return ignoreScope(className) || ignoreScope(name);
+	}
+	
+	public static boolean ignoreScope(String coroutineScope) {
+		return ignoredScopes.contains(coroutineScope);
 	}
 	
 	public static boolean ignoreContinuation(String cont_string) {

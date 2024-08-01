@@ -9,11 +9,11 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 
 public class NRContinuationWrapper<T> implements Continuation<T> {
-	
+
 	private Continuation<T> delegate = null;
 	private String name = null;
 	private static boolean isTransformed = false;
-	
+
 	public NRContinuationWrapper(Continuation<T> d, String n) {
 		delegate = d;
 		name = n;
@@ -22,7 +22,7 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 			isTransformed = true;
 		}
 	}
-	
+
 	@Override
 	public CoroutineContext getContext() {
 		return delegate.getContext();
