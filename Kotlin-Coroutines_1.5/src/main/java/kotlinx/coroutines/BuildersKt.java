@@ -34,8 +34,10 @@ public class BuildersKt {
 		String name = Utils.getCoroutineName(context);
 		if(name != null) {
 			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","runBlocking",name);
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", name);
 		} else {
 			NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","runBlocking");
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", "Could not determine");
 		}
 		NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
 
@@ -50,14 +52,18 @@ public class BuildersKt {
 	@Trace(dispatcher = true)
 	public static final <T> Deferred<T> async(CoroutineScope scope, CoroutineContext context, CoroutineStart cStart, Function2<? super CoroutineScope, ? super Continuation<? super T>, ? extends Object> block) {
 		if (!Utils.ignoreScope(scope)) {
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineStart", cStart.name());
+			NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineScope-Class", scope.getClass().getName());
 			String name = Utils.getCoroutineName(context);
 			if(name == null) {
 				name = Utils.getCoroutineName(scope.getCoroutineContext());
 			}
 			if(name != null) {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async",name);
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", name);
 			} else {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Builders","async");
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", "Could not determine");
 			}
 
 			Token token = Utils.getToken(context);
@@ -111,8 +117,10 @@ public class BuildersKt {
 			}
 			if (name != null) {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch", name);
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", name);
 			} else {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch");
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", "Could not determine");
 			}
 			NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
 			Token token = Utils.getToken(context);

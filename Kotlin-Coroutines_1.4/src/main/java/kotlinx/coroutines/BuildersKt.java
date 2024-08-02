@@ -111,8 +111,10 @@ public class BuildersKt {
 			}
 			if (name != null) {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch", name);
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", name);
 			} else {
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch");
+				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", "Could not determine");
 			}
 			NewRelic.getAgent().getTracedMethod().addCustomAttribute("Block", block.toString());
 			Token token = Utils.getToken(context);
