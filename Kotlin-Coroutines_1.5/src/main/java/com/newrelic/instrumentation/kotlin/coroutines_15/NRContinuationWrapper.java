@@ -41,7 +41,11 @@ public class NRContinuationWrapper<T> implements Continuation<T> {
 		}
 		Token t = Utils.getToken(getContext());
 		if(t != null) {
-			t.link();
+			if(Utils.continueWithLink()) {
+				t.link();
+			} else {
+				NewRelic.recordMetric("Kotlin/Coroutines/ContinuationWrapper/TokenLinkFailed", 1.0F);
+			}
 		}
 		if(delegate != null) {
 			delegate.resumeWith(p0);

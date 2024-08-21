@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.newrelic.agent.Transaction;
 import com.newrelic.agent.config.AgentConfig;
 import com.newrelic.agent.config.AgentConfigListener;
 import com.newrelic.agent.service.ServiceFactory;
@@ -222,4 +223,13 @@ public class Utils implements AgentConfigListener {
 		
 		return null;
 	}
+	
+	public static boolean continueWithLink() {
+		Transaction transaction = Transaction.getTransaction(false);
+		if(transaction != null) {
+			return transaction.getTransactionTimer() != null;
+		}
+		return true;
+	}
+
 }
