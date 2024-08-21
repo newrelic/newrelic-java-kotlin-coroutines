@@ -63,6 +63,10 @@ The following things are captured as part of the instrumentation
 
 Instrumentation of methods with high invocation rates can lead to CPU overhead especially if its average response time is very small (i.e. less than a few milliseconds).  Therefore it is possible to configure the agent to ignore certain suspend methods, dispatched tasks and continuation resumeWiths.  This configuation is done in the newrelic.yml file.   
 
+### Finding Coroutine Scopes to Ignore   
+This is basically meant for Standalone Coroutines that you don't want to track for some reason such as it is a long running task that doesn't need to be tracked.  Lazy Coroutines are a good example.  If the agent encounters that scope it will stop tracing that transaction, hence if you disable a scope that is part of another transaction rather than just itself it will also disable that transaction.  But the configuration is dynamic so you can remove to restore the transaction.  To find the value to use for the Coroutine Scope to ignore go into the transaction trace and select the "Custom/Builders/launch" or "Custom/Builders/async" span.   In the Attributes tab find CoroutineScope-Class for the value to use as shown below.   
+<img width="2064" alt="image" src="https://github.com/user-attachments/assets/e952e7df-9f0c-4d3c-8f58-109d4436d822">
+
 ### Finding Possible Methods to Ignore
 Run the following NRQL query where appName is the name of the application using Kotlin Coroutines.
 
@@ -90,6 +94,9 @@ To configure methods to ignore, edit the newrelic.yml file in the New Relic Java
    
 Note that these setting are dynamic, so typically the agent should pick up changes within a minute or so and implement the changes without having to restart.
 
+### Configuring Scopes to Ignore
+Similar to configuring the method to ignore above except add a line scopes: to the configuration as shown:
+<img width="872" alt="image" src="https://github.com/user-attachments/assets/aa4b9720-f604-458b-a746-d2b5898cd255">
 
 ## Building
 
