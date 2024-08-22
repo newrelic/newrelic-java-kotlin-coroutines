@@ -1,13 +1,13 @@
 package kotlinx.coroutines;
 
 import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Token;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.TracedMethod;
 import com.newrelic.api.agent.TransactionNamePriority;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines_17.NRFunction2Wrapper;
 import com.newrelic.instrumentation.kotlin.coroutines_17.Utils;
 
 import kotlin.coroutines.Continuation;
@@ -31,15 +31,14 @@ public abstract class AbstractCoroutine<T> {
 	}
 
 	public void handleOnCompletionException$kotlinx_coroutines_core(Throwable t) {
+		NewRelic.noticeError(t);
 		Weaver.callOriginal();
 	}
+	
+	
 
 	@Trace
 	public <R> void start(CoroutineStart start, R receiver, Function2<? super R, ? super Continuation<? super T>, ? extends Object> block) {
-		if(!(block instanceof NRFunction2Wrapper)) {
-			NRFunction2Wrapper<? super R, ? super Continuation<? super T>, ? extends Object> wrapper = new NRFunction2Wrapper<>(block);
-			block = wrapper;
-		}
 		String ctxName = Utils.getCoroutineName(getContext());
 		String name = ctxName != null ? ctxName : nameString$kotlinx_coroutines_core();
 		TracedMethod traced = NewRelic.getAgent().getTracedMethod();
@@ -56,4 +55,12 @@ public abstract class AbstractCoroutine<T> {
 		Weaver.callOriginal();
 	}
 
+	@Trace(async = true)
+	public void resumeWith(Object result) {
+		Token token = Utils.getToken(getContext());
+		if(token != null) {
+			token.link();
+		}
+		Weaver.callOriginal();
+	}
 }

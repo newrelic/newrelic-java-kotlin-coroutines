@@ -1,49 +1,35 @@
 package com.newrelic.instrumentation.kotlin.coroutines.tracing;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import com.newrelic.agent.deps.org.objectweb.asm.ClassReader;
 import com.newrelic.agent.instrumentation.classmatchers.ChildClassMatcher;
 import com.newrelic.agent.instrumentation.classmatchers.ClassMatcher;
-import com.newrelic.agent.instrumentation.classmatchers.ExactClassMatcher;
-import com.newrelic.agent.instrumentation.classmatchers.NotMatcher;
+import com.newrelic.agent.instrumentation.classmatchers.OrClassMatcher;
 
 public class SuspendClassMatcher extends ClassMatcher {
 	
-	ChildClassMatcher matcher;
-	NotMatcher nrMatcher;
+	private ClassMatcher orMatcher;
 	
 	public SuspendClassMatcher() {
-		matcher = new ChildClassMatcher("kotlin.coroutines.jvm.internal.BaseContinuationImpl",false);
-		nrMatcher = new NotMatcher(new ExactClassMatcher("com.newrelic.instrumentation.kotlin.coroutines.NRWrappedSuspend"));
+		ChildClassMatcher lambdamatcher = new ChildClassMatcher("kotlin.coroutines.jvm.internal.SuspendLambda",true);
+		ChildClassMatcher restrictedlambdamatcher = new ChildClassMatcher("kotlin.coroutines.jvm.internal.RestrictedSuspendLambda",true);
+		orMatcher = OrClassMatcher.getClassMatcher(lambdamatcher,restrictedlambdamatcher);
 	}
 
 	@Override
 	public boolean isMatch(ClassLoader loader, ClassReader cr) {
-		return matcher.isMatch(loader, cr) && nrMatcher.isMatch(loader, cr);
+		return orMatcher.isMatch(loader, cr);
 	}
 
 	@Override
 	public boolean isMatch(Class<?> clazz) {
-		return matcher.isMatch(clazz) && nrMatcher.isMatch(clazz);
+		return orMatcher.isMatch(clazz);
 	}
 
 	@Override
 	public Collection<String> getClassNames() {
-		Collection<String> childClasses = matcher.getClassNames();
-		Collection<String> nrClasses = nrMatcher.getClassNames();
-		if(childClasses == null && nrClasses == null) return null;
-		
-		ArrayList<String> list = new ArrayList<>();
-		if(childClasses != null) {
-			list.addAll(childClasses);
-		}
-		if(nrClasses != null) {
-			list.addAll(nrClasses);
-		}
-		
-		return list;
+		return orMatcher.getClassNames();
 	}
 
 }
