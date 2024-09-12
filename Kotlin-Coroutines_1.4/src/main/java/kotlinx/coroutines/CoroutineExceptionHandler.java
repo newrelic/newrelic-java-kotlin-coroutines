@@ -11,7 +11,9 @@ public abstract class CoroutineExceptionHandler {
 
 	@Trace
 	public void handleException(kotlin.coroutines.CoroutineContext ctx, java.lang.Throwable t) {
-		NewRelic.noticeError(t);
+		if (!(t instanceof JobCancellationException)) {
+			NewRelic.noticeError(t);
+		}
 		Weaver.callOriginal();
 	}
 }

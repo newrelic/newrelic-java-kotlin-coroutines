@@ -19,6 +19,9 @@ public class SuspendTracerFactory implements TracerFactory {
 		if(SuspendIgnores.ignoreSuspend(object)) {
 			return null;
 		}
+		if(!transaction.shouldGenerateTransactionSegment()) {
+			return null;
+		}
 		return new DefaultTracer(transaction, sig, object, new SimpleMetricNameFormat("Custom/SuspendFunction/"+Utils.getSuspendString(object.toString(), object)));
 	}
 

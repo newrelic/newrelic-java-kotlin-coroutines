@@ -31,11 +31,13 @@ public abstract class AbstractCoroutine<T> {
 	}
 
 	public void handleOnCompletionException$kotlinx_coroutines_core(Throwable t) {
-		NewRelic.noticeError(t);
+		if (!(t instanceof JobCancellationException)) {
+			NewRelic.noticeError(t);
+		}
 		Weaver.callOriginal();
 	}
-	
-	
+
+
 
 	@Trace
 	public <R> void start(CoroutineStart start, R receiver, Function2<? super R, ? super Continuation<? super T>, ? extends Object> block) {
@@ -44,7 +46,7 @@ public abstract class AbstractCoroutine<T> {
 		TracedMethod traced = NewRelic.getAgent().getTracedMethod();
 		traced.addCustomAttribute("Coroutine-Name", name);
 		traced.addCustomAttribute("Block", block.toString());
-		
+
 		if(name != null && !name.isEmpty()) {
 			NewRelic.getAgent().getTransaction().setTransactionName(TransactionNamePriority.FRAMEWORK_HIGH, false, "Coroutine", "Kotlin","Coroutine",name);
 			traced.setMetricName("Custom","Kotlin","Coroutines",getClass().getSimpleName(),"start",name);

@@ -1,5 +1,7 @@
 package com.newrelic.instrumentation.kotlin.coroutines;
 
+import com.newrelic.agent.Transaction;
+import com.newrelic.agent.TransactionActivity;
 import com.newrelic.agent.config.AgentConfig;
 import com.newrelic.agent.config.AgentConfigListener;
 import com.newrelic.agent.service.ServiceFactory;
@@ -37,5 +39,11 @@ public class Utils implements AgentConfigListener {
 		}
 		
 		return obj.getClass().getName();
+	}
+	
+	public static boolean tracerCheck(Transaction transaction) {
+		TransactionActivity txn = transaction.getTransactionActivity();
+		
+		return !(txn.getTracers().isEmpty());
 	}
 }

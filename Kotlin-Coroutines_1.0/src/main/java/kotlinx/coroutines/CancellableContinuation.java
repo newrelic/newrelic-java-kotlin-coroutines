@@ -16,7 +16,9 @@ public abstract class CancellableContinuation<T> {
 	
 	@Trace
 	public void resumeUndispatchedWithException(CoroutineDispatcher d, java.lang.Throwable t) {
-		NewRelic.noticeError(t);
+		if(!(t instanceof JobCancellationException)) {
+			NewRelic.noticeError(t);
+		}
 		Weaver.callOriginal();
 	}
 
