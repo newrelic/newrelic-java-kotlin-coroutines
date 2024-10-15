@@ -19,6 +19,9 @@
 
 Provides instrumentation for Kotlin Coroutines.  In particular it will trace the coroutine from its start, suspend and resume.   It does this across multilple threads.
 
+# Advisory   
+The current release is experiencing problems especially in the latest versions of the Java Agent.   The problem is with the Kotlin-Coroutines-Suspend.jar which is used to track suspend methods.  We are working on fixing the problem but if you are experiencing NullPointerExceptions or Inconsistent tracer errors in the Java Agent log, please remove Kotlin-Coroutines-Suspend.jar from the extensions directory and restart the application.  We apologize for the inconvience. We will advise when we have fixed the problem.   
+
 ## Supported Versions
 
 Kotlin-Coroutines-Suspends - provides tracing of Kotlin Coroutine suspend functions across all versions.   
