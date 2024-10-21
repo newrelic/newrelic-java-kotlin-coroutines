@@ -1,3 +1,6 @@
+## Version: [v1.0.5](https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/tag/v1.0.5) | Created: 2024-10-21
+
+
 ## Version: [v1.0.4](https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/tag/v1.0.4) | Created: 2024-08-02
 ### Bug Fixes
 - Erge pull request #27 from newrelic/ktor_fixes
