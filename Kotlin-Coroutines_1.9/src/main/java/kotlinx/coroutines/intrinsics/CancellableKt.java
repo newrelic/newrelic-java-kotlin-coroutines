@@ -5,10 +5,10 @@ import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.TracedMethod;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines_17.NRContinuationWrapper;
-import com.newrelic.instrumentation.kotlin.coroutines_17.NRFunction1Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines_17.NRFunction2Wrapper;
-import com.newrelic.instrumentation.kotlin.coroutines_17.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_19.NRContinuationWrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_19.NRFunction1Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_19.NRFunction2Wrapper;
+import com.newrelic.instrumentation.kotlin.coroutines_19.Utils;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.jvm.internal.SuspendFunction;

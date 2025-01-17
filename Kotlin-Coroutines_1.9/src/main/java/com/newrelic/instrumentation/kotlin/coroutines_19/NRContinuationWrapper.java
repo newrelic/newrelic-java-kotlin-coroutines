@@ -1,4 +1,4 @@
-package com.newrelic.instrumentation.kotlin.coroutines_17;
+package com.newrelic.instrumentation.kotlin.coroutines_19;
 
 import com.newrelic.agent.bridge.AgentBridge;
 import com.newrelic.api.agent.NewRelic;
