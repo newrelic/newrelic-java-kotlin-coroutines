@@ -54,8 +54,7 @@ public class SuspendClassTransformer implements ContextClassTransformer {
 			for(ClassAndMethodMatcher matcher : match.getClassMatches().keySet()) {
 				if (matcher.getMethodMatcher().matches(MethodMatcher.UNSPECIFIED_ACCESS, method.getName(),
 						method.getDescriptor(), match.getMethodAnnotations(method))) {
-					
-//					context.putTraceAnnotation(method, TraceDetailsBuilder.newBuilder().setTracerFactoryName(SuspendTracerFactory.TRACER_FACTORY_NAME).setDispatcher(true).setInstrumentationSourceName("CoroutinesCore").setInstrumentationType(InstrumentationType.TraceAnnotation).build());
+					context.putTraceAnnotation(method, TraceDetailsBuilder.newBuilder().setTracerFactoryName(SuspendTracerFactory.TRACER_FACTORY_NAME).setDispatcher(true).setInstrumentationSourceName("CoroutinesCore").setInstrumentationType(InstrumentationType.TraceAnnotation).build());
 				}
 
 			}

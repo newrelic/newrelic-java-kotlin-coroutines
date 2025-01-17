@@ -13,13 +13,13 @@ public class Utils implements AgentConfigListener {
 	public static final String CREATEMETHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
 	public static String sub = "createCoroutineFromSuspendFunction";
 	private static final String CONT_LOC = "Continuation at";
-	
+
 	static {
 		ServiceFactory.getConfigService().addIAgentConfigListener(INSTANCE);
 		Config config = NewRelic.getAgent().getConfig();
 		SuspendIgnores.reset(config);
 	}
-	
+
 	@Override
 	public void configChanged(String appName, AgentConfig agentConfig) {
 		SuspendIgnores.reset(agentConfig);
