@@ -13,12 +13,14 @@ public class SuspendIgnores {
 
 	private static final List<String> ignoredSuspends = new ArrayList<String>();
 	private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
+	private static final List<String> ignoredPackages = new ArrayList<>();
 
 	static {
 		Config config = NewRelic.getAgent().getConfig();
 		String value = config.getValue(SUSPENDSIGNORECONFIG);
 		init(value);
-
+		ignoredPackages.add("kotlin.coroutines");
+		ignoredPackages.add("kotlinx.coroutines");
 	}
 	
 	private static void init(String value) {
@@ -45,24 +47,30 @@ public class SuspendIgnores {
 	
 	public static boolean ignoreSuspend(Object obj) {
 		String objString = obj.toString();
-		String className = obj.getClass().getName();
-		NewRelic.getAgent().getLogger().log(Level.FINE, "Call to SuspendIgnores.ignoreSuspend, objString = {0}, className = {1}" , objString, className);
+		Class<?> clazz = obj.getClass();
+		String className = clazz.getName();
+		String packageName = clazz.getPackage().getName();
 		
-		if(ignoredSuspends.contains(objString) || ignoredSuspends.contains(className)) {
-			NewRelic.getAgent().getLogger().log(Level.FINE, "Matched classname or objString");
+		for(String ignored : ignoredPackages) {
+			if(packageName.startsWith(ignored)) {
+				return true;
+			}
+		}
+		
+		boolean objStringMatch = ignoredSuspends.contains(objString);
+		boolean classNameMatch = ignoredSuspends.contains(className);
+		
+		if(objStringMatch || classNameMatch) {
 			return true;
 		}
  		
 		for(String s : ignoredSuspends) {
-			NewRelic.getAgent().getLogger().log(Level.FINE, "Comparing to regex {0}", s);
 			Pattern pattern = Pattern.compile(s);
 			Matcher matcher1 = pattern.matcher(objString);
 			Matcher matcher2 = pattern.matcher(className);
-			NewRelic.getAgent().getLogger().log(Level.FINE, matcher1.matches() ? "Matched objString" : matcher2.matches() ? "Matched Classname" : "not a match for object string or classname");
 			if(matcher1.matches() || matcher2.matches()) return true;
 		}
 		
 		return false;
-//		return ignoredSuspends.contains(obj.toString()) || ignoredSuspends.contains(obj.getClass().getName());
 	}
 }
