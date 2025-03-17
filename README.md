@@ -88,7 +88,8 @@ At minumum consider ignoring anything over 50K.
 
 Below each rate is the name of the metric,  it has the form Custom/DispatchedTask/..., or Custom/WrappedSuspend/... or Custom/ContinuationWrapper/... depending on the query that was run.   Collect a list of the remaining metric name (i.e. the ...).
    
-### Configuring Methods to Ignore
+### Configuring Methods to Ignore   
+The configuration supports using regular expression wildcards to ignore multiple items rather than having to list each one separately. For example, to ignore any suspend function in the class com.mycompany.mypackage.MyClass, use 
 To configure methods to ignore, edit the newrelic.yml file in the New Relic Java Agent directory.   
 1.  Find the following lines in newrelic.yml
 
@@ -104,7 +105,7 @@ Note that these setting are dynamic, so typically the agent should pick up chang
 
 ### Configuring Scopes to Ignore
 Similar to configuring the method to ignore above except add a line scopes: to the configuration as shown:
-<img width="872" alt="image" src="https://github.com/user-attachments/assets/aa4b9720-f604-458b-a746-d2b5898cd255">
+<img width="872" alt="image" src="https://github.com/user-attachments/assets/aa4b9720-f604-458b-a746-d2b5898cd255">   
 
 ## Building
 
