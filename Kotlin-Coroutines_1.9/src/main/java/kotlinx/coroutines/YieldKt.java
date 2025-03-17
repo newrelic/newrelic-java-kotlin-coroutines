@@ -4,7 +4,7 @@ import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Trace;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines_17.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_19.Utils;
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;

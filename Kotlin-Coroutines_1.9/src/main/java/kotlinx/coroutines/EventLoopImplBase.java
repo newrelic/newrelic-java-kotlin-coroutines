@@ -7,7 +7,7 @@ import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.NewField;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
-import com.newrelic.instrumentation.kotlin.coroutines_17.Utils;
+import com.newrelic.instrumentation.kotlin.coroutines_19.Utils;
 
 @Weave
 public abstract class EventLoopImplBase {

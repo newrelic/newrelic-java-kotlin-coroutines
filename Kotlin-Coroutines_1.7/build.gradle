@@ -3,7 +3,7 @@
 
 apply plugin: 'java'
 
-// targetCompatibility = JavaVersion.VERSION_1_9
+targetCompatibility = JavaVersion.VERSION_1_9
 
 dependencies {
   implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.7.3'

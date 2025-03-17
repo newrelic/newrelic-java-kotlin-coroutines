@@ -20,9 +20,7 @@
 Provides instrumentation for Kotlin Coroutines.  In particular it will trace the coroutine from its start, suspend and resume.   It does this across multilple threads.
 
 # Advisory   
-The current release is experiencing problems especially in the latest versions of the Java Agent.   The problem is with the Kotlin-Coroutines-Suspend.jar which is used to track suspend methods.  We are working on fixing the problem but if you are experiencing NullPointerExceptions or Inconsistent tracer errors in the Java Agent log, please remove Kotlin-Coroutines-Suspends.jar from the extensions directory and restart the application.  
-The current release has been modified and no longer contains Kotlin-Coroutines-Suspends.jar    
-We apologize for the inconvience. We will advise when we have fixed the problem.  A new release will be generated when the problem is fixed.    
+Due to problems revolving around Suspend Functions in Kotlin Coroutines, a fix was required to the Java Agent to resolve these problems.  The fix is available in the 8.19.0 version and later of the Java Agent.   The instrumentation for Suspend Functions has been included again but does require that you use version 8.19.0 or later of the Java Agent.   If you are unable to upgrade the agent, then remove the Kotlin-Coroutines-Suspends.jar from the extensions directory.       
 
 ## Supported Versions
 
@@ -69,6 +67,10 @@ The following things are captured as part of the instrumentation
 
 Instrumentation of methods with high invocation rates can lead to CPU overhead especially if its average response time is very small (i.e. less than a few milliseconds).  Therefore it is possible to configure the agent to ignore certain suspend methods, dispatched tasks and continuation resumeWiths.  This configuation is done in the newrelic.yml file.   
 
+### Suspend Function Tracking   
+
+The instrumentation will track suspend functions that are outside of those within the Kotlin Coroutine framework.  This means that it will track suspend functions that are genrated in your code and in frameworks that use Coroutines.   
+   
 ### Finding Coroutine Scopes to Ignore   
 This is basically meant for Standalone Coroutines that you don't want to track for some reason such as it is a long running task that doesn't need to be tracked.  Lazy Coroutines are a good example.  If the agent encounters that scope it will stop tracing that transaction, hence if you disable a scope that is part of another transaction rather than just itself it will also disable that transaction.  But the configuration is dynamic so you can remove to restore the transaction.  To find the value to use for the Coroutine Scope to ignore go into the transaction trace and select the "Custom/Builders/launch" or "Custom/Builders/async" span.   In the Attributes tab find CoroutineScope-Class for the value to use as shown below.   
 <img width="2064" alt="image" src="https://github.com/user-attachments/assets/e952e7df-9f0c-4d3c-8f58-109d4436d822">
@@ -86,7 +88,10 @@ At minumum consider ignoring anything over 50K.
 
 Below each rate is the name of the metric,  it has the form Custom/DispatchedTask/..., or Custom/WrappedSuspend/... or Custom/ContinuationWrapper/... depending on the query that was run.   Collect a list of the remaining metric name (i.e. the ...).
    
-### Configuring Methods to Ignore
+### Configuring Methods to Ignore   
+The configuration supports using regular expression wildcards to ignore multiple items rather than having to list each one separately. For example, to ignore any suspend function in the class com.mycompany.mypackage.MyClass, use com\.mycompany\.mypackage\.MyClass.*    
+Note that Java Regular Expressions as regular expressions so consult a cheat sheet for guidance. (e.g. https://quickref.me/regex.html)   
+   
 To configure methods to ignore, edit the newrelic.yml file in the New Relic Java Agent directory.   
 1.  Find the following lines in newrelic.yml
 
@@ -102,7 +107,7 @@ Note that these setting are dynamic, so typically the agent should pick up chang
 
 ### Configuring Scopes to Ignore
 Similar to configuring the method to ignore above except add a line scopes: to the configuration as shown:
-<img width="872" alt="image" src="https://github.com/user-attachments/assets/aa4b9720-f604-458b-a746-d2b5898cd255">
+<img width="872" alt="image" src="https://github.com/user-attachments/assets/aa4b9720-f604-458b-a746-d2b5898cd255">   
 
 ## Building
 
