@@ -67,6 +67,10 @@ The following things are captured as part of the instrumentation
 
 Instrumentation of methods with high invocation rates can lead to CPU overhead especially if its average response time is very small (i.e. less than a few milliseconds).  Therefore it is possible to configure the agent to ignore certain suspend methods, dispatched tasks and continuation resumeWiths.  This configuation is done in the newrelic.yml file.   
 
+### Suspend Function Tracking   
+
+The instrumentation will track suspend functions that are outside of those within the Kotlin Coroutine framework.  This means that it will track suspend functions that are genrated in your code and in frameworks that use Coroutines.   
+   
 ### Finding Coroutine Scopes to Ignore   
 This is basically meant for Standalone Coroutines that you don't want to track for some reason such as it is a long running task that doesn't need to be tracked.  Lazy Coroutines are a good example.  If the agent encounters that scope it will stop tracing that transaction, hence if you disable a scope that is part of another transaction rather than just itself it will also disable that transaction.  But the configuration is dynamic so you can remove to restore the transaction.  To find the value to use for the Coroutine Scope to ignore go into the transaction trace and select the "Custom/Builders/launch" or "Custom/Builders/async" span.   In the Attributes tab find CoroutineScope-Class for the value to use as shown below.   
 <img width="2064" alt="image" src="https://github.com/user-attachments/assets/e952e7df-9f0c-4d3c-8f58-109d4436d822">
