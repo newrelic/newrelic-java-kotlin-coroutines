@@ -4,11 +4,9 @@
 apply plugin: 'java'
 
 dependencies {
-  implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.4.0'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
 
    // New Relic Java Agent dependencies
-   implementation 'com.newrelic.agent.java:newrelic-agent:6.4.1'
-   implementation 'com.newrelic.agent.java:newrelic-api:6.4.1'
    implementation fileTree(include: ['*.jar'], dir: '../libs')
    implementation fileTree(include: ['*.jar'], dir: '../test-lib')
 }
@@ -24,9 +22,14 @@ jar {
 }
 
 verifyInstrumentation {
-  // Verifier plugin documentation:
-  // https://github.com/newrelic/newrelic-gradle-verify-instrumentation
-  // Example:
-  // passes 'javax.servlet:servlet-api:[2.2,2.5]'
-  // exclude 'javax.servlet:servlet-api:2.4.public_draft'
+    passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.4.0,)'
+    passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.4.0)'
+    excludeRegex '.*SNAPSHOT'
+    excludeRegex '.*alpha'
+    excludeRegex '.*Beta'
+    excludeRegex '.*-eap-.*'
+    excludeRegex '.*-native-.*'
+    excludeRegex '.*-M[0-9]'
+    excludeRegex '.*-rc'
+    excludeRegex '.*-RC'
 }

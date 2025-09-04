@@ -1,7 +1,6 @@
 
-// Build.gradle generated for instrumentation module Kotlin-Coroutines_1.2
-
 apply plugin: 'java'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 
 targetCompatibility = JavaVersion.VERSION_1_9
 
@@ -9,8 +8,6 @@ dependencies {
   implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.9.0'
 
    // New Relic Java Agent dependencies
-   implementation 'com.newrelic.agent.java:newrelic-agent:6.0.0'
-   implementation 'com.newrelic.agent.java:newrelic-api:6.0.0'
    implementation fileTree(include: ['*.jar'], dir: '../libs')
 }
 
@@ -24,7 +21,7 @@ jar {
 }
 
 verifyInstrumentation {
-	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.9.0,)]'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.9.0,)'
 	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.9.0,)'
 	excludeRegex '.*SNAPSHOT'
 	excludeRegex '.*alpha'
