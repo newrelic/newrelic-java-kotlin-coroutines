@@ -28,14 +28,16 @@ Kotlin-Coroutines-Suspends - provides tracing of Kotlin Coroutine suspend functi
 Kotlin-Coroutines-1.0 - all 1.0.x versions. 
 Kotlin-Coroutines-1.1 - all 1.1.x versions.  
 Kotlin-Coroutines-1.2 - all 1.2.x and 1.3.x versions.   
-Kotlin-Coroutines-1.4 - all 1.4.x versions.   
-Kotlin-Coroutines-1.5 - all 1.5.x and 1.6.x versions.   
+Kotlin-Coroutines-1.4 - all 1.4.x, 1.5.x and 1.6.x versions.     
 Kotlin-Coroutines-1.7 - all 1.7.x and 1.8.x versions.   
 Kotlin-Coroutines-1.9 - all 1.9.x and later versions.   
 
 ## Installation
 To use this instrumentation.   
 Download the latest release.    
+Use the 8.20.0 or later version of the Java Agent.   
+Set the system flag -Dnewrelic.config.class_transformer.clear_return_stacks=true   
+(see https://docs.newrelic.com/docs/release-notes/agent-release-notes/java-release-notes/java-agent-8200/)   
 In the New Relic Java Agent directory (directory containing newrelic.jar), create a directory named extensions if it does not already exist.   
 Copy the jars into the extensions directory.   
 Restart the application.   
