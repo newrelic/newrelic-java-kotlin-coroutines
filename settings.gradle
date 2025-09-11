@@ -1,4 +1,4 @@
-rootProject.name = 'java-instrumentation-template'
+rootProject.name = 'kotlin-coroutines'
 include 'Kotlin-Coroutines_1.0'
 include 'Kotlin-Coroutines_1.1'
 include 'Kotlin-Coroutines_1.2'
