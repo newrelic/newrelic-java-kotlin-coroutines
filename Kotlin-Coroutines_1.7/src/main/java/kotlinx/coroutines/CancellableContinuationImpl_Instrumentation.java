@@ -29,11 +29,6 @@ public abstract class CancellableContinuationImpl_Instrumentation<T> {
     }
 
     @Trace
-    public <R extends T> java.lang.Object tryResume(R r, Object obj, Function3<? super Throwable, ? super R, ? super CoroutineContext, Unit> function3) {
-        return Weaver.callOriginal();
-    }
-
-    @Trace
     public void completeResume(Object object) {
         Weaver.callOriginal();
     }
@@ -58,8 +53,4 @@ public abstract class CancellableContinuationImpl_Instrumentation<T> {
         Weaver.callOriginal();
     }
 
-    @Trace
-    public <R extends T> void resume(R r, Function3<? super Throwable, ? super R, ? super CoroutineContext, Unit> function3) {
-        Weaver.callOriginal();
-    }
 }
