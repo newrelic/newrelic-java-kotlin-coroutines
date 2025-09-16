@@ -1,4 +1,4 @@
-package com.newrelic.instrumentation.kotlin.coroutines_17
+package com.newrelic.instrumentation.kotlin.coroutines_14
 
 import kotlin.coroutines.*
 import com.newrelic.api.agent.Token
@@ -25,7 +25,7 @@ fun removeTokenContext(context : CoroutineContext) : CoroutineContext {
         @Nullable var token = tokenContext.token
         token.expire()
 
-        return context.minusKey(com.newrelic.instrumentation.kotlin.coroutines_17.TokenContextElement.Key)
+        return context.minusKey(TokenContextElement.Key)
     }
     return context
 }
