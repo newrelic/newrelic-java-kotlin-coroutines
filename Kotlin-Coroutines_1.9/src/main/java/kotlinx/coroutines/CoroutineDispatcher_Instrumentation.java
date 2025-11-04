@@ -7,6 +7,7 @@ import com.newrelic.instrumentation.kotlin.coroutines_19.NRRunnable;
 import com.newrelic.instrumentation.kotlin.coroutines_19.Utils;
 
 import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.internal.LimitedDispatcher;
 
 /*
  * Dispatchers are used to dispatch tasks to another thread.  By wrapping the Runable
@@ -16,11 +17,15 @@ import kotlin.coroutines.CoroutineContext;
 public abstract class CoroutineDispatcher_Instrumentation {
 
 	public void dispatch(CoroutineContext ctx, Runnable r) {
-		NRRunnable wrapper = Utils.getRunnableWrapper(r);
-		if(wrapper != null) {
-			r = wrapper;
+		String classname = getClass().getName();
+
+		if(!classname.contains("LimitedDispatcher")) {
+			NRRunnable wrapper = Utils.getRunnableWrapper(r);
+			if(wrapper != null) {
+				r = wrapper;
+			}
 		}
-		
+
 		Weaver.callOriginal();
 	}
 }

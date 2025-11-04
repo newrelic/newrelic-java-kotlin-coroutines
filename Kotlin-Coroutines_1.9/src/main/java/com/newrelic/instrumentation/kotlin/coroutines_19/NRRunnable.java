@@ -7,6 +7,8 @@ import com.newrelic.api.agent.Trace;
 import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.DispatchedTask;
 
+import java.util.logging.Level;
+
 public class NRRunnable implements Runnable {
 	
 	private Runnable delegate = null;
@@ -14,6 +16,7 @@ public class NRRunnable implements Runnable {
 	private static boolean isTransformed = false;
 	
 	public NRRunnable(Runnable r,Token t) {
+		NewRelic.getAgent().getLogger().log(Level.FINER, new Exception("Constructing NRRunnable"), "NRRunnable {0}", r.toString());
 		if(!isTransformed) {
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
 			isTransformed = true;

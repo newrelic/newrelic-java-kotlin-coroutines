@@ -14,6 +14,8 @@ import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.jvm.internal.SuspendFunction;
 import kotlin.jvm.functions.Function2;
 
+import java.util.logging.Level;
+
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Weave(originalName = "kotlinx.coroutines.BuildersKt")
 public class BuildersKt_Instrumentation {
@@ -64,7 +66,7 @@ public class BuildersKt_Instrumentation {
 	}
 
 	@Trace(dispatcher = true)
-	public static <T> Object invoke(CoroutineDispatcher_Instrumentation dispatcher,
+	public static <T> Object invoke(CoroutineDispatcher dispatcher,
             Function2<? super CoroutineScope, ? super Continuation<? super T>, ?> block, Continuation<? super T> cont) {
 
 		NewRelic.getAgent().getTracedMethod().addCustomAttribute("Continuation", cont.toString());
@@ -94,6 +96,7 @@ public class BuildersKt_Instrumentation {
 				name = Utils.getCoroutineName(scope.getCoroutineContext());
 			}
 			if (name != null) {
+				NewRelic.getAgent().getLogger().log(Level.FINE, new Exception("Call to BuildersKt.launch"), "Call to start {0}", name);
 				NewRelic.getAgent().getTracedMethod().setMetricName("Custom", "Builders", "launch", name);
 				NewRelic.getAgent().getTracedMethod().addCustomAttribute("CoroutineName", name);
 			} else {
