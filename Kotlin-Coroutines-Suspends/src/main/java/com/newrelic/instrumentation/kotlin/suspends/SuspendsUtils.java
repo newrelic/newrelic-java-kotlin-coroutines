@@ -6,25 +6,54 @@ import com.newrelic.agent.config.AgentConfig;
 import com.newrelic.agent.config.AgentConfigListener;
 import com.newrelic.agent.service.ServiceFactory;
 import com.newrelic.agent.tracers.*;
+import com.newrelic.api.agent.Config;
+import com.newrelic.api.agent.NewRelic;
 import kotlin.coroutines.Continuation;
 import kotlinx.coroutines.AbstractCoroutine;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class SuspendsUtils implements AgentConfigListener {
 
     private static final HashSet<String> ignoredSuspends = new HashSet<>();
+    private static final HashSet<Pattern> ignoredRegexSuspends = new HashSet<>();
     public static final String CREATE_METHOD1 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$4";
     public static final String CREATE_METHOD2 = "Continuation at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$3";
     private static final String CONT_LOC = "Continuation at";
     public static String sub = "createCoroutineFromSuspendFunction";
     public static final String KOTLIN_PACKAGE = "kotlin";
     private static final String SUSPEND_FUNCTION_METRIC_NAME_PREFIX = "Custom/Kotlin/Coroutines/SuspendFunction/";
-    private static final String SUSPENDSIGNORECONFIG = "Coroutines.ignores.suspends";
+    private static final String SUSPENDSIGNORECONFIG = "coroutines.suspends.ignore";
+    private static final String SUSPENDSREGEXIGNORECONFIG = "coroutines.suspends.ignoreRegex";
 
     static {
         ServiceFactory.getConfigService().addIAgentConfigListener(new SuspendsUtils());
+        Config agentConfig = NewRelic.getAgent().getConfig();
+        String value = agentConfig.getValue(SUSPENDSIGNORECONFIG);
+        NewRelic.getAgent().getLogger().log(Level.FINE,"Value of {0} is {1}", SUSPENDSIGNORECONFIG, value);
+        if(value != null) {
+            ignoredSuspends.clear();
+            String[] split = value.split(",");
+            if(split.length > 0) {
+                ignoredSuspends.addAll(Arrays.asList(split));
+            }
+        }
+        value =  agentConfig.getValue(SUSPENDSREGEXIGNORECONFIG);
+        NewRelic.getAgent().getLogger().log(Level.FINE,"Value of {0} is {1}", SUSPENDSREGEXIGNORECONFIG, value);
+        if (value != null) {
+            ignoredRegexSuspends.clear();
+            String[] split = value.split(",");
+            if(split.length > 0) {
+                for(String ignoredRegex : split) {
+                    NewRelic.getAgent().getLogger().log(Level.FINE,"Will ignore suspends matching {0}", ignoredRegex);
+                    ignoredRegexSuspends.add(Pattern.compile(ignoredRegex));
+                }
+            }
+        }
+
     }
 
     private SuspendsUtils() {}
@@ -38,8 +67,10 @@ public class SuspendsUtils implements AgentConfigListener {
         // ignore if can't determine continuation string
         if(continuationString == null || continuationString.isEmpty()) { return null; }
 
-        for(String ignoredSuspend : ignoredSuspends) {
-            if(continuationString.matches(ignoredSuspend) || className.matches(ignoredSuspend)) { return null; }
+        for(Pattern ignoredSuspend : ignoredRegexSuspends) {
+            if(ignoredSuspend.matcher(continuationString).matches() || ignoredSuspend.matcher(className).matches()) {
+                return null;
+            }
         }
         if (ignoredSuspends.contains(continuationString) || ignoredSuspends.contains(className)) {
             return null;
@@ -83,10 +114,24 @@ public class SuspendsUtils implements AgentConfigListener {
     @Override
     public void configChanged(String s, AgentConfig agentConfig) {
         String value = agentConfig.getValue(SUSPENDSIGNORECONFIG);
+        NewRelic.getAgent().getLogger().log(Level.FINE,"Value of {0} is {1}", SUSPENDSIGNORECONFIG, value);
         if(value != null) {
+            ignoredSuspends.clear();
             String[] split = value.split(",");
             if(split.length > 0) {
                 ignoredSuspends.addAll(Arrays.asList(split));
+            }
+        }
+        value =  agentConfig.getValue(SUSPENDSREGEXIGNORECONFIG);
+        NewRelic.getAgent().getLogger().log(Level.FINE,"Value of {0} is {1}", SUSPENDSREGEXIGNORECONFIG, value);
+        if (value != null) {
+            ignoredRegexSuspends.clear();
+            String[] split = value.split(",");
+            if(split.length > 0) {
+                for(String ignoredRegex : split) {
+                    NewRelic.getAgent().getLogger().log(Level.FINE,"Will ignore suspends matching {0}", ignoredRegex);
+                    ignoredRegexSuspends.add(Pattern.compile(ignoredRegex));
+                }
             }
         }
     }
