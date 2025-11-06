@@ -1,0 +1,34 @@
+
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1-native-mt")
+
+   // New Relic Java Agent dependencies
+   implementation fileTree(include: ['*.jar'], dir: '../libs')
+}
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'com.newrelic.instrumentation.labs.Kotlin-Coroutines_1.4-native-mt'
+    attributes 'Implementation-Vendor': 'New Relic Labs'
+    attributes 'Implementation-Vendor-Id': 'com.newrelic.labs'
+    attributes 'Implementation-Version': 2.0
+  }
+}
+
+verifyInstrumentation {
+//	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core:[1.4.0,1.7.0)'
+//	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.4.0,1.7.0)'
+	passes 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:[1.5.1.native-mt,1.7.0)'
+	excludeRegex '.*SNAPSHOT'
+	excludeRegex '.*alpha'
+	excludeRegex '.*-eap-.*'
+	excludeRegex '.*-native-.*'
+	excludeRegex '.*-M[0-9]'
+	excludeRegex '.*-rc'
+	excludeRegex '.*-RC.*'
+	excludeRegex '.*-Beta'
+}
