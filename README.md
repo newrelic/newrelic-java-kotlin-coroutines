@@ -15,6 +15,8 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/newrelic/newrelic-java-kotlin-coroutines)
 ![GitHub pull requests closed](https://img.shields.io/github/issues-pr-closed/newrelic/newrelic-java-kotlin-coroutines)
 
+# This instrumentation has moved and now included with the Java Agent as of version 8.25.0.   Please use that version of the agent or later.   All support is shifted to the Java Agent
+
 # New Relic Java Instrumentation for Kotlin Coroutines
 
 Provides instrumentation for Kotlin Coroutines.  In particular it will trace the coroutine from its start, suspend and resume.   It does this across multilple threads.
